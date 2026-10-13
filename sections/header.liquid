@@ -1,66 +1,639 @@
-<header>
-  <h2 class="header__title">
-    {{ shop.name | link_to: routes.root_url }}
-  </h2>
-
-  <div class="header__menu">
-    {% for link in section.settings.menu.links %}
-      {{ link.title | link_to: link.url }}
-    {% endfor %}
-  </div>
-
-  <div class="header__icons">
-    {% if shop.customer_accounts_enabled %}
-      {{ 'icon-account.svg' | inline_asset_content | link_to: routes.account_url }}
+{%- style -%}
+  .wh-header-container {
+    width: 100%;
+    background-color: {{ section.settings.bg_color }};
+    {% if section.settings.bg_image != blank %}
+      background-image: url('{{ section.settings.bg_image | image_url: width: 2000 }}');
+      background-position: center;
+      background-size: cover;
+      background-repeat: no-repeat;
     {% endif %}
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
+    color: {{ section.settings.text_color }};
+    box-sizing: border-box;
+    position: relative;
+  }
 
-    <a href="{{ routes.cart_url }}">
-      {% if cart.item_count > 0 %}
-        <sup>{{ cart.item_count }}</sup>
-      {% endif %}
-
-      {{ 'icon-cart.svg' | inline_asset_content }}
-    </a>
-  </div>
-</header>
-
-{% stylesheet %}
-  header {
-    height: 5rem;
+  /* 1. Top Bar */
+  .wh-top-bar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: {{ section.settings.top_bar_padding }}px 40px;
+    font-size: {{ section.settings.top_bar_font_size }}px;
+    background-color: {% if section.settings.bg_image != blank %}transparent{% else %}{{ section.settings.bg_color }}{% endif %};
+    border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+  }
+  .wh-top-left {
     display: flex;
     align-items: center;
-    justify-content: space-between;
+    gap: 8px;
+    color: {{ section.settings.text_color }};
   }
-  header a {
-    position: relative;
-    text-decoration: none;
-    color: var(--color-foreground);
-  }
-  header a sup {
-    position: absolute;
-    left: 100%;
-    overflow: hidden;
-    max-width: var(--page-margin);
-  }
-  header svg {
-    width: 2rem;
-  }
-  header .header__menu,
-  header .header__icons {
+  .wh-top-right {
     display: flex;
-    gap: 1rem;
+    align-items: center;
+    gap: 20px;
   }
-{% endstylesheet %}
+  .wh-lang-picker {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    font-size: {{ section.settings.top_bar_font_size }}px;
+    cursor: pointer;
+    color: {{ section.settings.text_color }};
+  }
+  .wh-social-links {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .wh-social-links a {
+    color: {{ section.settings.text_color }};
+    display: flex;
+    align-items: center;
+    text-decoration: none;
+  }
+
+  /* 2. Main Header */
+  .wh-main-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: {{ section.settings.header_padding }}px 40px;
+  }
+  
+  .wh-mobile-menu-trigger {
+    display: none;
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 0;
+    color: {{ section.settings.text_color }};
+  }
+
+  /* Main Header Text Logo (TEXAN above, AGENCY below) */
+  .wh-logo-container a {
+    text-decoration: none;
+    color: {{ section.settings.text_color }};
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    line-height: 1;
+  }
+  .wh-logo-title {
+    font-size: {{ section.settings.logo_text_size }}px;
+    font-weight: 400;
+    letter-spacing: 8px;
+    font-family: "Didot", "Bodoni MT", "Cinzel", "Times New Roman", serif;
+    text-transform: uppercase;
+    text-align: center;
+  }
+  .wh-logo-subtitle {
+    font-size: {{ section.settings.logo_subtitle_size }}px;
+    letter-spacing: 6px;
+    margin-top: 6px;
+    font-weight: 400;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    text-transform: uppercase;
+    text-align: center;
+  }
+
+  .wh-logo-img {
+    max-width: {{ section.settings.logo_width }}px;
+    height: auto;
+    display: block;
+  }
+
+  /* Search Bar */
+  .wh-search-wrapper {
+    flex: 0 1 {{ section.settings.search_max_width }}px;
+    position: relative;
+  }
+  .wh-search-input {
+    width: 100%;
+    padding: 12px 48px 12px 24px;
+    border-radius: 30px;
+    border: none;
+    background-color: rgba(241, 241, 241, 0.9);
+    font-size: 14px;
+    color: #333333;
+    outline: none;
+    box-sizing: border-box;
+  }
+  .wh-search-input::placeholder {
+    color: #757575;
+  }
+  .wh-search-btn {
+    position: absolute;
+    right: 18px;
+    top: 50%;
+    transform: translateY(-50%);
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 0;
+    display: flex;
+    align-items: center;
+    color: {{ section.settings.text_color }};
+  }
+
+  /* Header Icons */
+  .wh-header-actions {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+  }
+  .wh-icon-link {
+    color: {{ section.settings.text_color }};
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 0;
+  }
+  .wh-cart-circle {
+    width: 42px;
+    height: 42px;
+    background-color: {{ section.settings.cart_bg_color }};
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+  }
+  .wh-cart-badge {
+    position: absolute;
+    top: -2px;
+    right: -2px;
+    background-color: {{ section.settings.text_color }};
+    color: {{ section.settings.bg_color }};
+    font-size: 10px;
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+  }
+
+  /* 3. Navigation Bar */
+  .wh-nav-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 10px 0 18px 0;
+  }
+  .wh-nav-menu {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    align-items: center;
+    gap: {{ section.settings.menu_gap }}px;
+  }
+  .wh-nav-item a {
+    text-decoration: none;
+    color: {{ section.settings.text_color }};
+    font-size: {{ section.settings.menu_font_size }}px;
+    font-weight: {% if section.settings.menu_bold %}700{% else %}400{% endif %};
+    display: flex;
+    align-items: center;
+    gap: 5px;
+  }
+
+  .wh-drawer-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 9998;
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.3s ease;
+  }
+
+  /* Mobile Drawer Styling */
+  .wh-drawer-menu {
+    position: fixed;
+    top: 0;
+    left: -320px;
+    width: 300px;
+    height: 100%;
+    background-color: {{ section.settings.drawer_bg_color }};
+    z-index: 9999;
+    box-shadow: 2px 0 10px rgba(0,0,0,0.1);
+    transition: all 0.3s ease;
+    padding: 20px;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+  }
+  .wh-drawer-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-bottom: 15px;
+    border-bottom: 1px solid rgba(0,0,0,0.1);
+  }
+  .wh-drawer-logo a {
+    text-decoration: none;
+    color: {{ section.settings.text_color }};
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    line-height: 1;
+  }
+  .wh-drawer-logo-title {
+    font-size: 20px;
+    font-weight: 400;
+    letter-spacing: 5px;
+    font-family: "Didot", "Bodoni MT", "Cinzel", "Times New Roman", serif;
+    text-transform: uppercase;
+  }
+  .wh-drawer-logo-subtitle {
+    font-size: 8px;
+    letter-spacing: 4px;
+    margin-top: 4px;
+    font-weight: 400;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    text-transform: uppercase;
+    opacity: 0.8;
+  }
+  .wh-drawer-close {
+    background: none;
+    border: none;
+    font-size: 24px;
+    cursor: pointer;
+    color: {{ section.settings.text_color }};
+    padding: 0;
+  }
+  .wh-drawer-list {
+    list-style: none;
+    padding: 20px 0;
+    margin: 0;
+    overflow-y: auto;
+  }
+  .wh-drawer-item {
+    margin-bottom: 18px;
+  }
+  .wh-drawer-item a {
+    text-decoration: none;
+    font-size: {{ section.settings.mobile_menu_font_size }}px;
+    color: {{ section.settings.text_color }};
+    font-weight: 600;
+  }
+
+  .wh-cart-drawer {
+    position: fixed;
+    top: 0;
+    right: -380px;
+    width: 350px;
+    max-width: 90vw;
+    height: 100%;
+    background-color: {{ section.settings.drawer_bg_color }};
+    z-index: 9999;
+    box-shadow: -2px 0 10px rgba(0,0,0,0.1);
+    transition: all 0.3s ease;
+    padding: 20px;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+  }
+  .wh-cart-drawer-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-bottom: 15px;
+    border-bottom: 1px solid rgba(0,0,0,0.1);
+  }
+  .wh-cart-drawer-title {
+    font-size: 18px;
+    font-weight: bold;
+    color: {{ section.settings.text_color }};
+  }
+  .wh-cart-drawer-body {
+    flex: 1;
+    overflow-y: auto;
+    padding: 15px 0;
+  }
+  .wh-cart-item {
+    display: flex;
+    gap: 12px;
+    margin-bottom: 15px;
+    padding-bottom: 15px;
+    border-bottom: 1px solid #f0f0f0;
+  }
+  .wh-cart-item img {
+    width: 60px;
+    height: 60px;
+    object-fit: cover;
+    border-radius: 4px;
+  }
+  .wh-cart-item-info {
+    flex: 1;
+  }
+  .wh-cart-item-title {
+    font-size: 14px;
+    font-weight: 600;
+    margin: 0 0 4px 0;
+    color: {{ section.settings.text_color }};
+  }
+  .wh-cart-item-price {
+    font-size: 13px;
+    color: #555;
+  }
+  .wh-cart-drawer-footer {
+    padding-top: 15px;
+    border-top: 1px solid rgba(0,0,0,0.1);
+  }
+  .wh-cart-total {
+    display: flex;
+    justify-content: space-between;
+    font-size: 16px;
+    font-weight: bold;
+    margin-bottom: 15px;
+  }
+  .wh-checkout-btn {
+    width: 100%;
+    padding: 12px;
+    background-color: {{ section.settings.text_color }};
+    color: {{ section.settings.bg_color }};
+    border: none;
+    border-radius: 25px;
+    font-size: 15px;
+    font-weight: bold;
+    cursor: pointer;
+    text-align: center;
+    text-decoration: none;
+    display: block;
+    box-sizing: border-box;
+  }
+
+  .wh-menu-drawer-active .wh-drawer-menu { left: 0; }
+  .wh-cart-drawer-active .wh-cart-drawer { right: 0; }
+  .wh-menu-drawer-active .wh-drawer-overlay,
+  .wh-cart-drawer-active .wh-drawer-overlay {
+    opacity: 1;
+    visibility: visible;
+  }
+
+  /* Reduced Left/Right Padding for Mobile */
+  @media (max-width: 990px) {
+    .wh-nav-container { display: none; }
+    .wh-mobile-menu-trigger { display: flex; }
+    .wh-main-header { padding: 10px 10px; flex-wrap: wrap; }
+    .wh-top-bar { padding: 8px 10px; }
+    .wh-search-wrapper { order: 3; width: 100%; margin-top: 8px; }
+    .wh-logo-title { font-size: {{ section.settings.logo_text_size | times: 0.8 }}px; }
+  }
+{%- endstyle -%}
+
+<header class="wh-header-container" id="WhHeader-{{ section.id }}">
+  {%- if section.settings.show_top_bar -%}
+    <div class="wh-top-bar">
+      <div class="wh-top-left">
+        {%- if section.settings.announcement_icon != blank -%}
+          <span>{{ section.settings.announcement_icon }}</span>
+        {%- endif -%}
+        <span>{{ section.settings.announcement_text }}</span>
+      </div>
+      <div class="wh-top-right">
+        {%- if section.settings.show_lang_picker -%}
+          <div class="wh-lang-picker">
+            <span>{{ section.settings.lang_text }}</span>
+            <svg width="10" height="6" viewBox="0 0 10 6" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M1 1L5 5L9 1"/></svg>
+          </div>
+        {%- endif -%}
+        <div class="wh-social-links">
+          {%- if section.settings.facebook_link != blank -%}
+            <a href="{{ section.settings.facebook_link }}" aria-label="Facebook">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M9 8H6v4h3v12h5V12h3.642L18 8h-4V6.333C14 5.374 14.5 5 15.5 5H18V0h-3.808C10.592 0 9 1.583 9 4.615V8z"/></svg>
+            </a>
+          {%- endif -%}
+          {%- if section.settings.instagram_link != blank -%}
+            <a href="{{ section.settings.instagram_link }}" aria-label="Instagram">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line></svg>
+            </a>
+          {%- endif -%}
+        </div>
+      </div>
+    </div>
+  {%- endif -%}
+
+  <div class="wh-main-header">
+    <button class="wh-mobile-menu-trigger" id="whDrawerOpenBtn" aria-label="Open Menu">
+      <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>
+    </button>
+
+    <!-- Texan Agency Text Logo -->
+    <div class="wh-logo-container">
+      {%- if section.settings.logo != blank -%}
+        <a href="{{ routes.root_url }}">
+          <img class="wh-logo-img" src="{{ section.settings.logo | image_url: width: 400 }}" alt="{{ shop.name }}">
+        </a>
+      {%- else -%}
+        <a href="{{ routes.root_url }}">
+          <span class="wh-logo-title">{{ section.settings.logo_text_main }}</span>
+          {%- if section.settings.logo_text_sub != blank -%}
+            <span class="wh-logo-subtitle">{{ section.settings.logo_text_sub }}</span>
+          {%- endif -%}
+        </a>
+      {%- endif -%}
+    </div>
+
+    <div class="wh-search-wrapper">
+      <form action="{{ routes.search_url }}" method="get" role="search">
+        <input type="search" name="q" class="wh-search-input" placeholder="{{ section.settings.search_placeholder }}">
+        <button type="submit" class="wh-search-btn" aria-label="Search">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+        </button>
+      </form>
+    </div>
+
+    <div class="wh-header-actions">
+      {%- if shop.customer_accounts_enabled -%}
+        <a href="{{ routes.account_url }}" class="wh-icon-link" aria-label="Account">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+        </a>
+      {%- endif -%}
+      
+      <button type="button" class="wh-icon-link wh-cart-circle" id="whCartOpenBtn" aria-label="Cart">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"></path><line x1="3" y1="6" x2="21" y2="6"></line><path d="M16 10a4 4 0 0 1-8 0"></path></svg>
+        <span class="wh-cart-badge" id="whCartBadge">{{ cart.item_count }}</span>
+      </button>
+    </div>
+  </div>
+
+  <nav class="wh-nav-container">
+    <ul class="wh-nav-menu">
+      {%- if section.settings.menu != blank -%}
+        {%- for link in section.settings.menu.links -%}
+          <li class="wh-nav-item">
+            <a href="{{ link.url }}">
+              {{ link.title }}
+              {%- if link.links != blank -%}
+                <svg width="9" height="5" viewBox="0 0 10 6" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 1L5 5L9 1"/></svg>
+              {%- endif -%}
+            </a>
+          </li>
+        {%- endfor -%}
+      {%- else -%}
+        <li class="wh-nav-item"><a href="#">Summer Sale</a></li>
+        <li class="wh-nav-item"><a href="#">Outdoor Furniture</a></li>
+        <li class="wh-nav-item"><a href="#">New Arrivals</a></li>
+      {%- endif -%}
+    </ul>
+  </nav>
+
+  <div class="wh-drawer-overlay" id="whDrawerOverlay"></div>
+
+  <!-- Mobile Menu Drawer -->
+  <aside class="wh-drawer-menu" id="whDrawerPanel">
+    <div class="wh-drawer-header">
+      <div class="wh-drawer-logo">
+        {%- if section.settings.drawer_logo != blank -%}
+          <a href="{{ routes.root_url }}">
+            <img class="wh-drawer-logo-img" src="{{ section.settings.drawer_logo | image_url: width: 300 }}" alt="{{ shop.name }}">
+          </a>
+        {%- elsif section.settings.logo != blank -%}
+          <a href="{{ routes.root_url }}">
+            <img class="wh-drawer-logo-img" src="{{ section.settings.logo | image_url: width: 300 }}" alt="{{ shop.name }}">
+          </a>
+        {%- else -%}
+          <a href="{{ routes.root_url }}">
+            <span class="wh-drawer-logo-title">{{ section.settings.logo_text_main }}</span>
+            {%- if section.settings.logo_text_sub != blank -%}
+              <span class="wh-drawer-logo-subtitle">{{ section.settings.logo_text_sub }}</span>
+            {%- endif -%}
+          </a>
+        {%- endif -%}
+      </div>
+      <button class="wh-drawer-close" id="whDrawerCloseBtn">&times;</button>
+    </div>
+
+    <ul class="wh-drawer-list">
+      {%- if section.settings.menu != blank -%}
+        {%- for link in section.settings.menu.links -%}
+          <li class="wh-drawer-item"><a href="{{ link.url }}">{{ link.title }}</a></li>
+        {%- endfor -%}
+      {%- else -%}
+        <li class="wh-drawer-item"><a href="#">Summer Sale</a></li>
+        <li class="wh-drawer-item"><a href="#">Outdoor Furniture</a></li>
+      {%- endif -%}
+    </ul>
+  </aside>
+
+  <aside class="wh-cart-drawer" id="whCartPanel">
+    <div class="wh-cart-drawer-header">
+      <span class="wh-cart-drawer-title">Your Cart</span>
+      <button class="wh-drawer-close" id="whCartCloseBtn">&times;</button>
+    </div>
+
+    <div class="wh-cart-drawer-body" id="whCartItemsContainer">
+      {%- if cart.item_count > 0 -%}
+        {%- for item in cart.items -%}
+          <div class="wh-cart-item">
+            <img src="{{ item.image | image_url: width: 120 }}" alt="{{ item.title }}">
+            <div class="wh-cart-item-info">
+              <p class="wh-cart-item-title">{{ item.product.title }}</p>
+              <p class="wh-cart-item-price">{{ item.quantity }} x {{ item.final_price | money }}</p>
+            </div>
+          </div>
+        {%- endfor -%}
+      {%- else -%}
+        <p style="text-align: center; color: #777; margin-top: 40px;">Your cart is empty</p>
+      {%- endif -%}
+    </div>
+
+    <div class="wh-cart-drawer-footer">
+      <div class="wh-cart-total">
+        <span>Total:</span>
+        <span id="whCartTotalAmount">{{ cart.total_price | money }}</span>
+      </div>
+      <a href="/checkout" class="wh-checkout-btn">Checkout</a>
+    </div>
+  </aside>
+</header>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    const headerContainer = document.getElementById('WhHeader-{{ section.id }}');
+    const overlay = document.getElementById('whDrawerOverlay');
+    const openMenuBtn = document.getElementById('whDrawerOpenBtn');
+    const closeMenuBtn = document.getElementById('whDrawerCloseBtn');
+    const openCartBtn = document.getElementById('whCartOpenBtn');
+    const closeCartBtn = document.getElementById('whCartCloseBtn');
+
+    if(openMenuBtn) openMenuBtn.addEventListener('click', () => headerContainer.classList.add('wh-menu-drawer-active'));
+    if(closeMenuBtn) closeMenuBtn.addEventListener('click', () => headerContainer.classList.remove('wh-menu-drawer-active'));
+    if(openCartBtn) openCartBtn.addEventListener('click', (e) => { e.preventDefault(); headerContainer.classList.add('wh-cart-drawer-active'); fetchCartData(); });
+    if(closeCartBtn) closeCartBtn.addEventListener('click', () => headerContainer.classList.remove('wh-cart-drawer-active'));
+    if(overlay) overlay.addEventListener('click', () => { headerContainer.classList.remove('wh-menu-drawer-active'); headerContainer.classList.remove('wh-cart-drawer-active'); });
+
+    function fetchCartData() {
+      fetch('/cart.js')
+        .then(res => res.json())
+        .then(cart => {
+          document.getElementById('whCartBadge').innerText = cart.item_count;
+          document.getElementById('whCartTotalAmount').innerText = (cart.total_price / 100).toFixed(2) + ' ' + (Shopify.currency ? Shopify.currency.active : '');
+          const container = document.getElementById('whCartItemsContainer');
+          if (cart.items.length === 0) {
+            container.innerHTML = '<p style="text-align: center; color: #777; margin-top: 40px;">Your cart is empty</p>';
+          } else {
+            let html = '';
+            cart.items.forEach(item => {
+              html += `<div class="wh-cart-item"><img src="${item.image}" alt="${item.title}"><div class="wh-cart-item-info"><p class="wh-cart-item-title">${item.product_title}</p><p class="wh-cart-item-price">${item.quantity} x ${(item.final_price / 100).toFixed(2)}</p></div></div>`;
+            });
+            container.innerHTML = html;
+          }
+        });
+    }
+  });
+</script>
 
 {% schema %}
 {
-  "name": "t:general.header",
+  "name": "Header with Texan Agency",
   "settings": [
-    {
-      "type": "link_list",
-      "id": "menu",
-      "label": "t:labels.menu"
-    }
+    { "type": "image_picker", "id": "bg_image", "label": "Header Background Image" },
+    { "type": "color", "id": "bg_color", "label": "Background Color", "default": "#ffffff" },
+    { "type": "color", "id": "drawer_bg_color", "label": "Drawer Background Color", "default": "#ffffff" },
+    { "type": "color", "id": "text_color", "label": "Text & Icon Color", "default": "#000000" },
+    { "type": "color", "id": "cart_bg_color", "label": "Cart Circle Background", "default": "#ededed" },
+    { "type": "image_picker", "id": "logo", "label": "Optional Custom Image Logo" },
+    { "type": "range", "id": "logo_width", "min": 50, "max": 350, "step": 5, "unit": "px", "label": "Image Logo Width", "default": 160 },
+    { "type": "text", "id": "logo_text_main", "label": "Main Logo Text", "default": "TEXAN" },
+    { "type": "text", "id": "logo_text_sub", "label": "Subtitle Logo Text", "default": "AGENCY" },
+    { "type": "range", "id": "logo_text_size", "min": 18, "max": 50, "step": 1, "unit": "px", "label": "Main Text Size", "default": 34 },
+    { "type": "range", "id": "logo_subtitle_size", "min": 6, "max": 18, "step": 1, "unit": "px", "label": "Subtitle Text Size", "default": 10 },
+    { "type": "image_picker", "id": "drawer_logo", "label": "Custom Drawer Image Logo" },
+    { "type": "checkbox", "id": "show_top_bar", "label": "Show Top Bar", "default": true },
+    { "type": "text", "id": "announcement_icon", "label": "Announcement Icon", "default": "📦" },
+    { "type": "text", "id": "announcement_text", "label": "Announcement Text", "default": "Free shipping on orders over $100" },
+    { "type": "range", "id": "top_bar_font_size", "min": 10, "max": 20, "step": 1, "unit": "px", "label": "Top Bar Font Size", "default": 13 },
+    { "type": "range", "id": "top_bar_padding", "min": 2, "max": 20, "step": 1, "unit": "px", "label": "Top Bar Vertical Padding", "default": 6 },
+    { "type": "checkbox", "id": "show_lang_picker", "label": "Show Language Picker", "default": true },
+    { "type": "text", "id": "lang_text", "label": "Language Label", "default": "English" },
+    { "type": "url", "id": "facebook_link", "label": "Facebook Link" },
+    { "type": "url", "id": "instagram_link", "label": "Instagram Link" },
+    { "type": "text", "id": "search_placeholder", "label": "Search Placeholder Text", "default": "What are you looking for?" },
+    { "type": "range", "id": "search_max_width", "min": 200, "max": 800, "step": 20, "unit": "px", "label": "Search Bar Max Width", "default": 520 },
+    { "type": "link_list", "id": "menu", "label": "Navigation Menu" },
+    { "type": "range", "id": "menu_font_size", "min": 12, "max": 24, "step": 1, "unit": "px", "label": "Menu Font Size", "default": 15 },
+    { "type": "range", "id": "mobile_menu_font_size", "min": 12, "max": 24, "step": 1, "unit": "px", "label": "Mobile Menu Font Size", "default": 16 },
+    { "type": "checkbox", "id": "menu_bold", "label": "Bold Menu Text", "default": true },
+    { "type": "range", "id": "menu_gap", "min": 10, "max": 60, "step": 2, "unit": "px", "label": "Gap Between Menu Items", "default": 32 },
+    { "type": "range", "id": "header_padding", "min": 5, "max": 40, "step": 1, "unit": "px", "label": "Header Padding Vertical", "default": 15 }
+  ],
+  "presets": [
+    { "name": "Header with Texan Agency" }
   ]
 }
 {% endschema %}
