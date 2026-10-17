@@ -1,17 +1,564 @@
-# OS generated files #
-######################
-.DS_Store
-.DS_Store?
-._*
-.Spotlight-V100
-.Trashes
-ehthumbs.db
-Thumbs.db
-node_modules/
+{%- style -%}
+  /* 100% Full Width Background without left/right padding */
+  .tf-footer-wrapper {
+    width: 100vw;
+    position: relative;
+    left: 50%;
+    right: 50%;
+    margin-left: -50vw;
+    margin-right: -50vw;
+    background-color: {{ section.settings.bg_color }};
+    border-top: 1px solid rgba(0, 0, 0, 0.05);
+    box-sizing: border-box;
+  }
 
-# Shopify CLI files
-.shopify/
+  /* Desktop Padding */
+  .tf-footer-container {
+    width: 100%;
+    margin: 0 auto;
+    color: {{ section.settings.text_color }};
+    font-family: "Segoe UI", -apple-system, BlinkMacSystemFont, Roboto, Arial, sans-serif;
+    padding: {{ section.settings.padding_top }}px 0 {{ section.settings.padding_bottom }}px 0;
+    box-sizing: border-box;
+  }
 
-## Release files
-release
-*.zip
+  /* Inner Grid Content matching header layout width with comfortable side padding */
+  .tf-footer-grid {
+    display: grid;
+    grid-template-columns: 1.3fr 1fr 1fr 1fr 1.5fr;
+    gap: 40px;
+    max-width: 1470px;
+    margin: 0 auto;
+    padding: 0 40px;
+    box-sizing: border-box;
+  }
+
+  /* Column 1: Brand & Logo */
+  .tf-brand-col {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .tf-logo-link {
+    text-decoration: none;
+    color: {{ section.settings.text_color }};
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    line-height: 1;
+    margin-bottom: 20px;
+  }
+
+  .tf-logo-title {
+    font-size: {{ section.settings.logo_text_size }}px;
+    font-weight: 400;
+    letter-spacing: 8px;
+    font-family: "Didot", "Bodoni MT", "Cinzel", "Times New Roman", serif;
+    text-transform: uppercase;
+  }
+
+  .tf-logo-subtitle {
+    font-size: {{ section.settings.logo_subtitle_size }}px;
+    letter-spacing: 6px;
+    margin-top: 6px;
+    font-weight: 400;
+    font-family: "Segoe UI", -apple-system, BlinkMacSystemFont, Roboto, sans-serif;
+    text-transform: uppercase;
+    opacity: 0.8;
+  }
+
+  .tf-brand-desc {
+    font-size: 14px;
+    line-height: 1.6;
+    color: {{ section.settings.text_color }};
+    opacity: 0.8;
+    margin: 0 0 24px 0;
+    max-width: 280px;
+    font-family: "Segoe UI", -apple-system, BlinkMacSystemFont, Roboto, sans-serif;
+  }
+
+  .tf-social-icons {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+  }
+
+  .tf-social-icons a {
+    color: {{ section.settings.text_color }};
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-decoration: none;
+    transition: opacity 0.2s ease;
+  }
+
+  .tf-social-icons a:hover {
+    opacity: 0.6;
+  }
+
+  /* Navigation Columns */
+  .tf-nav-col {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .tf-col-title {
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: 0;
+    margin-bottom: 20px;
+    color: {{ section.settings.text_color }};
+    font-family: "Segoe UI", -apple-system, BlinkMacSystemFont, Roboto, sans-serif;
+  }
+
+  .tf-nav-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+
+  .tf-nav-item {
+    margin-bottom: 12px;
+  }
+
+  .tf-nav-item a {
+    text-decoration: none;
+    color: {{ section.settings.text_color }};
+    font-size: 12px;
+    letter-spacing: 0;
+    opacity: 0.75;
+    transition: opacity 0.2s ease;
+    font-family: "Segoe UI", -apple-system, BlinkMacSystemFont, Roboto, sans-serif;
+  }
+
+  .tf-nav-item a:hover {
+    opacity: 1;
+  }
+
+  /* Column 5: Newsletter */
+  .tf-newsletter-col {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .tf-newsletter-desc {
+    font-size: 13px;
+    line-height: 1.6;
+    color: {{ section.settings.text_color }};
+    opacity: 0.8;
+    margin-bottom: 20px;
+    font-family: "Segoe UI", -apple-system, BlinkMacSystemFont, Roboto, sans-serif;
+  }
+
+  .tf-newsletter-form {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .tf-newsletter-input {
+    width: 100%;
+    padding: 14px 18px;
+    border: 1px solid #d1d1d1;
+    border-radius: 6px;
+    background-color: transparent;
+    font-size: 14px;
+    color: {{ section.settings.text_color }};
+    outline: none;
+    box-sizing: border-box;
+    font-family: "Segoe UI", -apple-system, BlinkMacSystemFont, Roboto, sans-serif;
+  }
+
+  .tf-newsletter-input::placeholder {
+    color: #888888;
+  }
+
+  .tf-newsletter-btn {
+    width: 100%;
+    padding: 14px;
+    background-color: transparent;
+    color: #a35d3d;
+    border: 1px solid #a35d3d;
+    font-size: 12px;
+    letter-spacing: 0;
+    font-weight: 600;
+    cursor: pointer;
+    text-align: center;
+    transition: all 0.2s ease;
+    box-sizing: border-box;
+    font-family: "Segoe UI", -apple-system, BlinkMacSystemFont, Roboto, sans-serif;
+  }
+
+  .tf-newsletter-btn:hover {
+    background-color: #a35d3d;
+    color: #ffffff;
+  }
+
+  /* Responsive Mobile Breakpoints */
+  @media (max-width: 1024px) {
+    .tf-footer-grid {
+      grid-template-columns: 1fr 1fr;
+      gap: 30px;
+    }
+    .tf-brand-col {
+      grid-column: span 2;
+    }
+    .tf-newsletter-col {
+      grid-column: span 2;
+    }
+  }
+
+  @media (max-width: 990px) {
+    .tf-footer-grid {
+      padding: 0 10px;
+    }
+  }
+
+  @media (max-width: 600px) {
+    .tf-footer-container {
+      padding: {{ section.settings.padding_top_mobile }}px 0 {{ section.settings.padding_bottom_mobile }}px 0;
+    }
+    .tf-footer-grid {
+      grid-template-columns: 1fr;
+      gap: 28px;
+      padding: 0 20px;
+    }
+    .tf-brand-col,
+    .tf-newsletter-col {
+      grid-column: span 1;
+    }
+  }
+{%- endstyle -%}
+
+<footer class="tf-footer-wrapper">
+  <div class="tf-footer-container">
+    <div class="tf-footer-grid">
+      
+      <!-- Column 1: Brand Info & Socials -->
+      <div class="tf-brand-col">
+        <a href="{{ routes.root_url }}" class="tf-logo-link">
+          <span class="tf-logo-title">{{ section.settings.logo_text_main }}</span>
+          {%- if section.settings.logo_text_sub != blank -%}
+            <span class="tf-logo-subtitle">{{ section.settings.logo_text_sub }}</span>
+          {%- endif -%}
+        </a>
+
+        {%- if section.settings.brand_description != blank -%}
+          <p class="tf-brand-desc">{{ section.settings.brand_description }}</p>
+        {%- endif -%}
+
+        <!-- Social Media Icons -->
+        <div class="tf-social-icons">
+          {%- if section.settings.twitter_link != blank -%}
+            <a href="{{ section.settings.twitter_link }}" aria-label="Twitter">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+            </a>
+          {%- endif -%}
+
+          {%- if section.settings.facebook_link != blank -%}
+            <a href="{{ section.settings.facebook_link }}" aria-label="Facebook">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M9 8H6v4h3v12h5V12h3.642L18 8h-4V6.333C14 5.374 14.5 5 15.5 5H18V0h-3.808C10.592 0 9 1.583 9 4.615V8z"/></svg>
+            </a>
+          {%- endif -%}
+
+          {%- if section.settings.instagram_link != blank -%}
+            <a href="{{ section.settings.instagram_link }}" aria-label="Instagram">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line></svg>
+            </a>
+          {%- endif -%}
+
+          {%- if section.settings.tiktok_link != blank -%}
+            <a href="{{ section.settings.tiktok_link }}" aria-label="TikTok">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 1 1-5.2-1.74 2.89 2.89 0 0 1 2.31-2.22V8.2a6.34 6.34 0 1 0 6.34 6.34V9.32a8.28 8.28 0 0 0 4.77 1.47V7.34a4.85 4.85 0 0 1-1-.65z"/></svg>
+            </a>
+          {%- endif -%}
+
+          {%- if section.settings.youtube_link != blank -%}
+            <a href="{{ section.settings.youtube_link }}" aria-label="YouTube">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg>
+            </a>
+          {%- endif -%}
+        </div>
+      </div>
+
+      <!-- Column 2: Navigation 1 -->
+      <div class="tf-nav-col">
+        <h3 class="tf-col-title">{{ section.settings.menu_1_title }}</h3>
+        <ul class="tf-nav-list">
+          {%- if section.settings.menu_1 != blank -%}
+            {%- for link in section.settings.menu_1.links -%}
+              <li class="tf-nav-item"><a href="{{ link.url }}">{{ link.title }}</a></li>
+            {%- endfor -%}
+          {%- else -%}
+            <li class="tf-nav-item"><a href="#">About Us</a></li>
+            <li class="tf-nav-item"><a href="#">FAQ</a></li>
+            <li class="tf-nav-item"><a href="#">Contact</a></li>
+            <li class="tf-nav-item"><a href="#">Blog</a></li>
+          {%- endif -%}
+        </ul>
+      </div>
+
+      <!-- Column 3: Navigation 2 -->
+      <div class="tf-nav-col">
+        <h3 class="tf-col-title">{{ section.settings.menu_2_title }}</h3>
+        <ul class="tf-nav-list">
+          {%- if section.settings.menu_2 != blank -%}
+            {%- for link in section.settings.menu_2.links -%}
+              <li class="tf-nav-item"><a href="{{ link.url }}">{{ link.title }}</a></li>
+            {%- endfor -%}
+          {%- else -%}
+            <li class="tf-nav-item"><a href="#">Dresses</a></li>
+            <li class="tf-nav-item"><a href="#">Bottoms</a></li>
+            <li class="tf-nav-item"><a href="#">Tops</a></li>
+            <li class="tf-nav-item"><a href="#">Jacket Coats</a></li>
+          {%- endif -%}
+        </ul>
+      </div>
+
+      <!-- Column 4: Navigation 3 -->
+      <div class="tf-nav-col">
+        <h3 class="tf-col-title">{{ section.settings.menu_3_title }}</h3>
+        <ul class="tf-nav-list">
+          {%- if section.settings.menu_3 != blank -%}
+            {%- for link in section.settings.menu_3.links -%}
+              <li class="tf-nav-item"><a href="{{ link.url }}">{{ link.title }}</a></li>
+            {%- endfor -%}
+          {%- else -%}
+            <li class="tf-nav-item"><a href="#">Crop Pants</a></li>
+            <li class="tf-nav-item"><a href="#">Cross Yoke Dress</a></li>
+            <li class="tf-nav-item"><a href="#">Maxi Skirt</a></li>
+            <li class="tf-nav-item"><a href="#">Mustard Yellow Cape</a></li>
+          {%- endif -%}
+        </ul>
+      </div>
+
+      <!-- Column 5: Newsletter -->
+      <div class="tf-newsletter-col">
+        <h3 class="tf-col-title">{{ section.settings.newsletter_title }}</h3>
+        <p class="tf-newsletter-desc">{{ section.settings.newsletter_desc }}</p>
+
+        {%- form 'customer', class: 'tf-newsletter-form' -%}
+          <input type="hidden" name="contact[tags]" value="newsletter">
+          <input 
+            type="email" 
+            name="contact[email]" 
+            class="tf-newsletter-input" 
+            placeholder="Email" 
+            required
+          >
+          <button type="submit" class="tf-newsletter-btn">
+            Submit
+          </button>
+        {%- endform -%}
+      </div>
+
+    </div>
+  </div>
+</footer>
+
+{% schema %}
+{
+  "name": "Texan Footer",
+  "settings": [
+    {
+      "type": "header",
+      "content": "🎨 Colors & Padding"
+    },
+    {
+      "type": "color",
+      "id": "bg_color",
+      "label": "Background Color",
+      "default": "#f5f5f5"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text Color",
+      "default": "#111111"
+    },
+    {
+      "type": "header",
+      "content": "Desktop Padding"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "min": 20,
+      "max": 100,
+      "step": 5,
+      "unit": "px",
+      "label": "Desktop Top Padding",
+      "default": 60
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "min": 20,
+      "max": 100,
+      "step": 5,
+      "unit": "px",
+      "label": "Desktop Bottom Padding",
+      "default": 60
+    },
+    {
+      "type": "header",
+      "content": "Mobile Padding"
+    },
+    {
+      "type": "range",
+      "id": "padding_top_mobile",
+      "min": 10,
+      "max": 80,
+      "step": 5,
+      "unit": "px",
+      "label": "Mobile Top Padding",
+      "default": 40
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom_mobile",
+      "min": 10,
+      "max": 80,
+      "step": 5,
+      "unit": "px",
+      "label": "Mobile Bottom Padding",
+      "default": 40
+    },
+    {
+      "type": "header",
+      "content": "🏷️ Logo & Brand Settings"
+    },
+    {
+      "type": "text",
+      "id": "logo_text_main",
+      "label": "Main Logo Text",
+      "default": "TEXAN"
+    },
+    {
+      "type": "text",
+      "id": "logo_text_sub",
+      "label": "Subtitle Logo Text",
+      "default": "AGENCY"
+    },
+    {
+      "type": "range",
+      "id": "logo_text_size",
+      "min": 18,
+      "max": 40,
+      "step": 1,
+      "unit": "px",
+      "label": "Main Text Size",
+      "default": 34
+    },
+    {
+      "type": "range",
+      "id": "logo_subtitle_size",
+      "min": 6,
+      "max": 16,
+      "step": 1,
+      "unit": "px",
+      "label": "Subtitle Text Size",
+      "default": 10
+    },
+    {
+      "type": "textarea",
+      "id": "brand_description",
+      "label": "Brand Description",
+      "default": "We sell quality product offerings by constantly evolving using innovation and design."
+    },
+    {
+      "type": "header",
+      "content": "🔗 Social Links"
+    },
+    {
+      "type": "url",
+      "id": "twitter_link",
+      "label": "Twitter / X Link",
+      "default": "/"
+    },
+    {
+      "type": "url",
+      "id": "facebook_link",
+      "label": "Facebook Link",
+      "default": "/"
+    },
+    {
+      "type": "url",
+      "id": "instagram_link",
+      "label": "Instagram Link",
+      "default": "/"
+    },
+    {
+      "type": "url",
+      "id": "tiktok_link",
+      "label": "TikTok Link",
+      "default": "/"
+    },
+    {
+      "type": "url",
+      "id": "youtube_link",
+      "label": "YouTube Link",
+      "default": "/"
+    },
+    {
+      "type": "header",
+      "content": "🧭 Navigation Menus"
+    },
+    {
+      "type": "text",
+      "id": "menu_1_title",
+      "label": "Menu 1 Title",
+      "default": "About Us"
+    },
+    {
+      "type": "link_list",
+      "id": "menu_1",
+      "label": "Select Menu 1"
+    },
+    {
+      "type": "text",
+      "id": "menu_2_title",
+      "label": "Menu 2 Title",
+      "default": "Quick Buy"
+    },
+    {
+      "type": "link_list",
+      "id": "menu_2",
+      "label": "Select Menu 2"
+    },
+    {
+      "type": "text",
+      "id": "menu_3_title",
+      "label": "Menu 3 Title",
+      "default": "New Arrivals"
+    },
+    {
+      "type": "link_list",
+      "id": "menu_3",
+      "label": "Select Menu 3"
+    },
+    {
+      "type": "header",
+      "content": "📬 Newsletter Settings"
+    },
+    {
+      "type": "text",
+      "id": "newsletter_title",
+      "label": "Newsletter Title",
+      "default": "SUBSCRIBE TO OUR EMAILS"
+    },
+    {
+      "type": "textarea",
+      "id": "newsletter_desc",
+      "label": "Newsletter Description",
+      "default": "Share contact information, store details, and brand content with your customers."
+    }
+  ],
+  "presets": [
+    {
+      "name": "Texan Footer"
+    }
+  ]
+}
+{% endschema %}
