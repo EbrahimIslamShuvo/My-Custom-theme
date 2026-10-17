@@ -1,0 +1,437 @@
+{% style %}
+  .et-section-{{ section.id }} {
+    padding: {{ section.settings.padding_top_mobile }}px 20px {{ section.settings.padding_bottom_mobile }}px;
+    background-color: {{ section.settings.bg_color }};
+  }
+
+  @media screen and (min-width: 769px) {
+    .et-section-{{ section.id }} {
+      padding: {{ section.settings.padding_top_desktop }}px 40px {{ section.settings.padding_bottom_desktop }}px;
+    }
+  }
+
+  .et-container-{{ section.id }} {
+    max-width: {{ section.settings.max_width }}px;
+    margin: 0 auto;
+  }
+
+  .et-heading-{{ section.id }} {
+    font-size: 28px;
+    line-height: 1.2;
+    font-weight: 500;
+    color: #111111;
+    margin: 0 0 30px 0;
+    max-width: 500px;
+    font-family: Georgia, serif;
+  }
+
+  @media screen and (min-width: 769px) {
+    .et-heading-{{ section.id }} {
+      font-size: 34px;
+      margin-bottom: 40px;
+    }
+  }
+
+  .et-content-grid-{{ section.id }} {
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
+  }
+
+  @media screen and (min-width: 769px) {
+    .et-content-grid-{{ section.id }} {
+      flex-direction: row;
+      align-items: center;
+      gap: 60px;
+    }
+  }
+
+  /* LEFT SIDE IMAGE STYLES */
+  .et-image-column-{{ section.id }} {
+    flex: 0 0 100%;
+    max-width: 360px;
+    width: 100%;
+  }
+
+  .et-main-image-wrapper-{{ section.id }} {
+    position: relative;
+    width: 100%;
+    padding-top: 100%;
+    background-color: #a3a8ab;
+    border-radius: 4px;
+    overflow: hidden;
+  }
+
+  .et-main-img-{{ section.id }},
+  .et-placeholder-wrapper-{{ section.id }} {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    opacity: 0;
+    transition: opacity 0.4s ease-in-out;
+  }
+
+  .et-placeholder-wrapper-{{ section.id }} {
+    background-color: #a3a8ab;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .et-placeholder-wrapper-{{ section.id }} svg.placeholder-svg {
+    width: 100%;
+    height: 100%;
+    background-color: #a3a8ab;
+  }
+
+  .et-main-img-{{ section.id }}.active,
+  .et-placeholder-wrapper-{{ section.id }}.active {
+    opacity: 1;
+    z-index: 2;
+  }
+
+  /* RIGHT SIDE DETAILS STYLES */
+  .et-details-column-{{ section.id }} {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  /* AVATARS LIST */
+  .et-avatars-list-{{ section.id }} {
+    display: flex;
+    gap: 12px;
+    margin-bottom: 24px;
+    flex-wrap: wrap;
+  }
+
+  .et-avatar-btn-{{ section.id }} {
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    border: 2px solid transparent;
+    padding: 0;
+    background: #a3a8ab;
+    cursor: pointer;
+    overflow: hidden;
+    transition: all 0.2s ease;
+    opacity: 0.5;
+  }
+
+  .et-avatar-btn-{{ section.id }}:hover {
+    opacity: 0.8;
+  }
+
+  .et-avatar-btn-{{ section.id }}.active {
+    opacity: 1;
+    border-color: #111111;
+  }
+
+  .et-avatar-btn-{{ section.id }} img,
+  .et-avatar-btn-{{ section.id }} svg.placeholder-svg {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    border-radius: 50%;
+    background-color: #a3a8ab;
+  }
+
+  /* DYNAMIC QUOTE & DETAILS */
+  .et-quote-container-{{ section.id }} {
+    position: relative;
+    min-height: 140px;
+    width: 100%;
+  }
+
+  .et-quote-item-{{ section.id }} {
+    display: none;
+    opacity: 0;
+    transition: opacity 0.4s ease-in-out;
+  }
+
+  .et-quote-item-{{ section.id }}.active {
+    display: block;
+    opacity: 1;
+  }
+
+  .et-quote-text-{{ section.id }} {
+    font-size: 20px;
+    line-height: 1.4;
+    color: #222222;
+    margin: 0 0 16px 0;
+    font-family: Georgia, serif;
+    font-style: normal;
+  }
+
+  @media screen and (min-width: 769px) {
+    .et-quote-text-{{ section.id }} {
+      font-size: 24px;
+    }
+  }
+
+  .et-author-name-{{ section.id }} {
+    font-size: 13px;
+    font-weight: 700;
+    color: #111111;
+    margin: 0;
+  }
+
+  .et-author-role-{{ section.id }} {
+    font-size: 12px;
+    color: #666666;
+    margin: 2px 0 0 0;
+  }
+{% endstyle %}
+
+<div class="et-section-{{ section.id }}">
+  <div class="et-container-{{ section.id }}">
+    
+    {%- if section.settings.heading != blank -%}
+      <h2 class="et-heading-{{ section.id }}">{{ section.settings.heading }}</h2>
+    {%- endif -%}
+
+    <div class="et-content-grid-{{ section.id }}">
+      
+      <!-- LEFT MAIN IMAGE -->
+      <div class="et-image-column-{{ section.id }}">
+        <div class="et-main-image-wrapper-{{ section.id }}">
+          {%- for block in section.blocks -%}
+            {%- assign main_img = block.settings.main_image -%}
+            {%- if main_img != blank -%}
+              <img 
+                class="et-main-img-{{ section.id }} {% if forloop.first %}active{% endif %}" 
+                data-index="{{ forloop.index0 }}"
+                src="{{ main_img | image_url: width: 800 }}" 
+                alt="{{ block.settings.name }}" 
+                loading="lazy"
+              >
+            {%- else -%}
+              <div class="et-placeholder-wrapper-{{ section.id }} {% if forloop.first %}active{% endif %}" data-index="{{ forloop.index0 }}">
+                {{ 'collection-1' | placeholder_svg_tag: 'placeholder-svg' }}
+              </div>
+            {%- endif -%}
+          {%- endfor -%}
+        </div>
+      </div>
+
+      <!-- RIGHT DETAILS (AVATARS + QUOTES) -->
+      <div class="et-details-column-{{ section.id }}">
+        
+        <!-- AVATAR BUTTONS -->
+        <div class="et-avatars-list-{{ section.id }}">
+          {%- for block in section.blocks -%}
+            {%- assign avatar_img = block.settings.avatar_image | default: block.settings.main_image -%}
+            <button 
+              type="button" 
+              class="et-avatar-btn-{{ section.id }} {% if forloop.first %}active{% endif %}" 
+              data-index="{{ forloop.index0 }}"
+              aria-label="View quote from {{ block.settings.name }}"
+            >
+              {%- if avatar_img != blank -%}
+                <img src="{{ avatar_img | image_url: width: 100 }}" alt="{{ block.settings.name }}" loading="lazy">
+              {%- else -%}
+                {{ 'collection-1' | placeholder_svg_tag: 'placeholder-svg' }}
+              {%- endif -%}
+            </button>
+          {%- endfor -%}
+        </div>
+
+        <!-- QUOTE CONTENT -->
+        <div class="et-quote-container-{{ section.id }}">
+          {%- for block in section.blocks -%}
+            <div class="et-quote-item-{{ section.id }} {% if forloop.first %}active{% endif %}" data-index="{{ forloop.index0 }}" {{ block.shopify_attributes }}>
+              <blockquote class="et-quote-text-{{ section.id }}">
+                “{{ block.settings.quote }}”
+              </blockquote>
+              <h4 class="et-author-name-{{ section.id }}">{{ block.settings.name }}</h4>
+              {%- if block.settings.role != blank -%}
+                <p class="et-author-role-{{ section.id }}">{{ block.settings.role }}</p>
+              {%- endif -%}
+            </div>
+          {%- endfor -%}
+        </div>
+
+      </div>
+
+    </div>
+
+  </div>
+</div>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    const sectionId = '{{ section.id }}';
+    const avatarBtns = document.querySelectorAll(`.et-avatar-btn-${sectionId}`);
+    const mainImages = document.querySelectorAll(`.et-main-img-${sectionId}, .et-placeholder-wrapper-${sectionId}`);
+    const quoteItems = document.querySelectorAll(`.et-quote-item-${sectionId}`);
+
+    avatarBtns.forEach(btn => {
+      btn.addEventListener('click', function() {
+        const index = this.getAttribute('data-index');
+
+        avatarBtns.forEach(b => b.classList.remove('active'));
+        mainImages.forEach(img => img.classList.remove('active'));
+        quoteItems.forEach(q => q.classList.remove('active'));
+
+        this.classList.add('active');
+        
+        const targetImg = document.querySelector(`.et-main-img-${sectionId}[data-index="${index}"], .et-placeholder-wrapper-${sectionId}[data-index="${index}"]`);
+        const targetQuote = document.querySelector(`.et-quote-item-${sectionId}[data-index="${index}"]`);
+
+        if (targetImg) targetImg.classList.add('active');
+        if (targetQuote) targetQuote.classList.add('active');
+      });
+    });
+  });
+</script>
+
+{% schema %}
+{
+  "name": "Model Testimonials",
+  "settings": [
+    {
+      "type": "textarea",
+      "id": "heading",
+      "label": "Section Heading",
+      "default": "Discover Why Top Fashion Models Trust Our Collections"
+    },
+    {
+      "type": "color",
+      "id": "bg_color",
+      "label": "Background Color",
+      "default": "#FFFFFF"
+    },
+    {
+      "type": "range",
+      "id": "max_width",
+      "min": 800,
+      "max": 1400,
+      "step": 20,
+      "unit": "px",
+      "label": "Max Width",
+      "default": 1100
+    },
+    {
+      "type": "range",
+      "id": "padding_top_desktop",
+      "min": 0,
+      "max": 100,
+      "step": 5,
+      "unit": "px",
+      "label": "Padding Top (Desktop)",
+      "default": 60
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom_desktop",
+      "min": 0,
+      "max": 100,
+      "step": 5,
+      "unit": "px",
+      "label": "Padding Bottom (Desktop)",
+      "default": 60
+    },
+    {
+      "type": "range",
+      "id": "padding_top_mobile",
+      "min": 0,
+      "max": 80,
+      "step": 5,
+      "unit": "px",
+      "label": "Padding Top (Mobile)",
+      "default": 30
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom_mobile",
+      "min": 0,
+      "max": 80,
+      "step": 5,
+      "unit": "px",
+      "label": "Padding Bottom (Mobile)",
+      "default": 30
+    }
+  ],
+  "blocks": [
+    {
+      "type": "fashion_model",
+      "name": "Fashion Model",
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "main_image",
+          "label": "Main Model Image"
+        },
+        {
+          "type": "image_picker",
+          "id": "avatar_image",
+          "label": "Small Avatar Image",
+          "info": "Leave blank to use Main Model Image automatically"
+        },
+        {
+          "type": "textarea",
+          "id": "quote",
+          "label": "Quote",
+          "default": "The fit and fabric quality are unmatched. It feels effortless, stylish, and perfect for every runway or casual look."
+        },
+        {
+          "type": "text",
+          "id": "name",
+          "label": "Model Name",
+          "default": "Sophia Laurent"
+        },
+        {
+          "type": "text",
+          "id": "role",
+          "label": "Title / Agency",
+          "default": "International Fashion Model & Stylist"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Model Testimonials",
+      "blocks": [
+        {
+          "type": "fashion_model",
+          "settings": {
+            "name": "Sophia Laurent",
+            "role": "International Runway Model",
+            "quote": "The fit and fabric quality are unmatched. It feels effortless, stylish, and perfect for every runway or casual look."
+          }
+        },
+        {
+          "type": "fashion_model",
+          "settings": {
+            "name": "Elena Rostova",
+            "role": "High Fashion Icon & Creative Director",
+            "quote": "Every piece brings a unique sense of sophistication and comfort that I truly love wearing daily."
+          }
+        },
+        {
+          "type": "fashion_model",
+          "settings": {
+            "name": "Marcus Vance",
+            "role": "Men's Vogue Fashion Ambassador",
+            "quote": "The attention to detail in tailored cuts makes this collection stand out from any other luxury brand."
+          }
+        },
+        {
+          "type": "fashion_model",
+          "settings": {
+            "name": "Isabella Chen",
+            "role": "Fashion Stylist & Editorial Model",
+            "quote": "Timeless designs combined with modern elegance. It's an absolute essential in my personal wardrobe."
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

@@ -14,6 +14,18 @@
     position: relative;
   }
 
+  /* Inner wrapper for width control */
+  .wh-header-inner-wrapper {
+    {% if section.settings.header_width_mode == 'custom' %}
+      max-width: {{ section.settings.header_max_width }}px;
+      margin: 0 auto;
+      width: 100%;
+    {% else %}
+      width: 100%;
+    {% endif %}
+    box-sizing: border-box;
+  }
+
   /* 1. Top Bar */
   .wh-top-bar {
     display: flex;
@@ -85,7 +97,7 @@
     font-size: {{ section.settings.logo_text_size }}px;
     font-weight: 400;
     letter-spacing: 8px;
-    font-family: "Didot", "Bodoni MT", "Cinzel", "Times New Roman", serif;
+    font-family: "Georgia", "Didot", "Bodoni MT", "Cinzel", "Times New Roman", serif;
     text-transform: uppercase;
     text-align: center;
   }
@@ -94,7 +106,7 @@
     letter-spacing: 6px;
     margin-top: 6px;
     font-weight: 400;
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    font-family: "Georgia", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
     text-transform: uppercase;
     text-align: center;
   }
@@ -254,7 +266,7 @@
     font-size: 20px;
     font-weight: 400;
     letter-spacing: 5px;
-    font-family: "Didot", "Bodoni MT", "Cinzel", "Times New Roman", serif;
+    font-family: "Georgia", "Didot", "Bodoni MT", "Cinzel", "Times New Roman", serif;
     text-transform: uppercase;
   }
   .wh-drawer-logo-subtitle {
@@ -262,7 +274,7 @@
     letter-spacing: 4px;
     margin-top: 4px;
     font-weight: 400;
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    font-family: "Georgia", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
     text-transform: uppercase;
     opacity: 0.8;
   }
@@ -396,101 +408,103 @@
 {%- endstyle -%}
 
 <header class="wh-header-container" id="WhHeader-{{ section.id }}">
-  {%- if section.settings.show_top_bar -%}
-    <div class="wh-top-bar">
-      <div class="wh-top-left">
-        {%- if section.settings.announcement_icon != blank -%}
-          <span>{{ section.settings.announcement_icon }}</span>
-        {%- endif -%}
-        <span>{{ section.settings.announcement_text }}</span>
-      </div>
-      <div class="wh-top-right">
-        {%- if section.settings.show_lang_picker -%}
-          <div class="wh-lang-picker">
-            <span>{{ section.settings.lang_text }}</span>
-            <svg width="10" height="6" viewBox="0 0 10 6" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M1 1L5 5L9 1"/></svg>
+  <div class="wh-header-inner-wrapper">
+    {%- if section.settings.show_top_bar -%}
+      <div class="wh-top-bar">
+        <div class="wh-top-left">
+          {%- if section.settings.announcement_icon != blank -%}
+            <span>{{ section.settings.announcement_icon }}</span>
+          {%- endif -%}
+          <span>{{ section.settings.announcement_text }}</span>
+        </div>
+        <div class="wh-top-right">
+          {%- if section.settings.show_lang_picker -%}
+            <div class="wh-lang-picker">
+              <span>{{ section.settings.lang_text }}</span>
+              <svg width="10" height="6" viewBox="0 0 10 6" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M1 1L5 5L9 1"/></svg>
+            </div>
+          {%- endif -%}
+          <div class="wh-social-links">
+            {%- if section.settings.facebook_link != blank -%}
+              <a href="{{ section.settings.facebook_link }}" aria-label="Facebook">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M9 8H6v4h3v12h5V12h3.642L18 8h-4V6.333C14 5.374 14.5 5 15.5 5H18V0h-3.808C10.592 0 9 1.583 9 4.615V8z"/></svg>
+              </a>
+            {%- endif -%}
+            {%- if section.settings.instagram_link != blank -%}
+              <a href="{{ section.settings.instagram_link }}" aria-label="Instagram">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line></svg>
+              </a>
+            {%- endif -%}
           </div>
-        {%- endif -%}
-        <div class="wh-social-links">
-          {%- if section.settings.facebook_link != blank -%}
-            <a href="{{ section.settings.facebook_link }}" aria-label="Facebook">
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M9 8H6v4h3v12h5V12h3.642L18 8h-4V6.333C14 5.374 14.5 5 15.5 5H18V0h-3.808C10.592 0 9 1.583 9 4.615V8z"/></svg>
-            </a>
-          {%- endif -%}
-          {%- if section.settings.instagram_link != blank -%}
-            <a href="{{ section.settings.instagram_link }}" aria-label="Instagram">
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line></svg>
-            </a>
-          {%- endif -%}
         </div>
       </div>
-    </div>
-  {%- endif -%}
+    {%- endif -%}
 
-  <div class="wh-main-header">
-    <button class="wh-mobile-menu-trigger" id="whDrawerOpenBtn" aria-label="Open Menu">
-      <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>
-    </button>
-
-    <!-- Texan Agency Text Logo -->
-    <div class="wh-logo-container">
-      {%- if section.settings.logo != blank -%}
-        <a href="{{ routes.root_url }}">
-          <img class="wh-logo-img" src="{{ section.settings.logo | image_url: width: 400 }}" alt="{{ shop.name }}">
-        </a>
-      {%- else -%}
-        <a href="{{ routes.root_url }}">
-          <span class="wh-logo-title">{{ section.settings.logo_text_main }}</span>
-          {%- if section.settings.logo_text_sub != blank -%}
-            <span class="wh-logo-subtitle">{{ section.settings.logo_text_sub }}</span>
-          {%- endif -%}
-        </a>
-      {%- endif -%}
-    </div>
-
-    <div class="wh-search-wrapper">
-      <form action="{{ routes.search_url }}" method="get" role="search">
-        <input type="search" name="q" class="wh-search-input" placeholder="{{ section.settings.search_placeholder }}">
-        <button type="submit" class="wh-search-btn" aria-label="Search">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
-        </button>
-      </form>
-    </div>
-
-    <div class="wh-header-actions">
-      {%- if shop.customer_accounts_enabled -%}
-        <a href="{{ routes.account_url }}" class="wh-icon-link" aria-label="Account">
-          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
-        </a>
-      {%- endif -%}
-      
-      <button type="button" class="wh-icon-link wh-cart-circle" id="whCartOpenBtn" aria-label="Cart">
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"></path><line x1="3" y1="6" x2="21" y2="6"></line><path d="M16 10a4 4 0 0 1-8 0"></path></svg>
-        <span class="wh-cart-badge" id="whCartBadge">{{ cart.item_count }}</span>
+    <div class="wh-main-header">
+      <button class="wh-mobile-menu-trigger" id="whDrawerOpenBtn" aria-label="Open Menu">
+        <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>
       </button>
-    </div>
-  </div>
 
-  <nav class="wh-nav-container">
-    <ul class="wh-nav-menu">
-      {%- if section.settings.menu != blank -%}
-        {%- for link in section.settings.menu.links -%}
-          <li class="wh-nav-item">
-            <a href="{{ link.url }}">
-              {{ link.title }}
-              {%- if link.links != blank -%}
-                <svg width="9" height="5" viewBox="0 0 10 6" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 1L5 5L9 1"/></svg>
-              {%- endif -%}
-            </a>
-          </li>
-        {%- endfor -%}
-      {%- else -%}
-        <li class="wh-nav-item"><a href="#">Summer Sale</a></li>
-        <li class="wh-nav-item"><a href="#">Outdoor Furniture</a></li>
-        <li class="wh-nav-item"><a href="#">New Arrivals</a></li>
-      {%- endif -%}
-    </ul>
-  </nav>
+      <!-- Texan Agency Text Logo -->
+      <div class="wh-logo-container">
+        {%- if section.settings.logo != blank -%}
+          <a href="{{ routes.root_url }}">
+            <img class="wh-logo-img" src="{{ section.settings.logo | image_url: width: 400 }}" alt="{{ shop.name }}">
+          </a>
+        {%- else -%}
+          <a href="{{ routes.root_url }}">
+            <span class="wh-logo-title">{{ section.settings.logo_text_main }}</span>
+            {%- if section.settings.logo_text_sub != blank -%}
+              <span class="wh-logo-subtitle">{{ section.settings.logo_text_sub }}</span>
+            {%- endif -%}
+          </a>
+        {%- endif -%}
+      </div>
+
+      <div class="wh-search-wrapper">
+        <form action="{{ routes.search_url }}" method="get" role="search">
+          <input type="search" name="q" class="wh-search-input" placeholder="{{ section.settings.search_placeholder }}">
+          <button type="submit" class="wh-search-btn" aria-label="Search">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+          </button>
+        </form>
+      </div>
+
+      <div class="wh-header-actions">
+        {%- if shop.customer_accounts_enabled -%}
+          <a href="{{ routes.account_url }}" class="wh-icon-link" aria-label="Account">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+          </a>
+        {%- endif -%}
+        
+        <button type="button" class="wh-icon-link wh-cart-circle" id="whCartOpenBtn" aria-label="Cart">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"></path><line x1="3" y1="6" x2="21" y2="6"></line><path d="M16 10a4 4 0 0 1-8 0"></path></svg>
+          <span class="wh-cart-badge" id="whCartBadge">{{ cart.item_count }}</span>
+        </button>
+      </div>
+    </div>
+
+    <nav class="wh-nav-container">
+      <ul class="wh-nav-menu">
+        {%- if section.settings.menu != blank -%}
+          {%- for link in section.settings.menu.links -%}
+            <li class="wh-nav-item">
+              <a href="{{ link.url }}">
+                {{ link.title }}
+                {%- if link.links != blank -%}
+                  <svg width="9" height="5" viewBox="0 0 10 6" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 1L5 5L9 1"/></svg>
+                {%- endif -%}
+              </a>
+            </li>
+          {%- endfor -%}
+        {%- else -%}
+          <li class="wh-nav-item"><a href="#">Summer Sale</a></li>
+          <li class="wh-nav-item"><a href="#">Outdoor Furniture</a></li>
+          <li class="wh-nav-item"><a href="#">New Arrivals</a></li>
+        {%- endif -%}
+      </ul>
+    </nav>
+  </div>
 
   <div class="wh-drawer-overlay" id="whDrawerOverlay"></div>
 
@@ -602,6 +616,30 @@
 {
   "name": "Header with Texan Agency",
   "settings": [
+    {
+      "type": "header",
+      "content": "Layout & Width Controls"
+    },
+    {
+      "type": "select",
+      "id": "header_width_mode",
+      "label": "Header Width Mode",
+      "options": [
+        { "value": "full", "label": "Full Width (100% Screen)" },
+        { "value": "custom", "label": "Custom Max-Width (Boxed)" }
+      ],
+      "default": "custom"
+    },
+    {
+      "type": "range",
+      "id": "header_max_width",
+      "min": 1000,
+      "max": 1920,
+      "step": 20,
+      "unit": "px",
+      "label": "Header Max Width (When Boxed)",
+      "default": 1440
+    },
     { "type": "image_picker", "id": "bg_image", "label": "Header Background Image" },
     { "type": "color", "id": "bg_color", "label": "Background Color", "default": "#ffffff" },
     { "type": "color", "id": "drawer_bg_color", "label": "Drawer Background Color", "default": "#ffffff" },
