@@ -14,12 +14,11 @@
     --hero-button-text: {{ section.settings.button_text_color }};
     --hero-arrow-bg: {{ section.settings.button_arrow_background }};
     --hero-arrow-color: {{ section.settings.button_arrow_color }};
-    --hero-card-bg: {{ section.settings.card_background }};
     --hero-max-width: {{ section.settings.content_width }}px;
     --hero-height: {{ section.settings.desktop_height }}px;
     --hero-mobile-height: {{ section.settings.mobile_height }}px;
+    --hero-content-padding: {{ section.settings.container_side_padding }}px;
     --hero-radius: {{ section.settings.card_radius }}px;
-    --hero-shadow-opacity: {{ section.settings.card_shadow_opacity | divided_by: 100.0 }};
   "
 >
   <div class="beauty-hero__inner">
@@ -33,861 +32,827 @@
           color: {{ section.settings.background_text_color }};
           top: {{ section.settings.background_text_top }}%;
         "
+        aria-hidden="true"
       >
-        {{ section.settings.background_text }}
+        {{ section.settings.background_text | escape }}
       </div>
     {% endif %}
 
-    {% if section.settings.top_left_decoration != blank %}
-      <img
-        class="beauty-hero__decoration beauty-hero__decoration--top-left"
-        src="{{ section.settings.top_left_decoration | image_url: width: 800 }}"
-        alt=""
-        loading="lazy"
-      >
-    {% endif %}
+    {% for position in (1..4) %}
+      {% case position %}
+        {% when 1 %}
+          {% assign decoration = section.settings.top_left_decoration %}
+          {% assign decoration_class = 'top-left' %}
+        {% when 2 %}
+          {% assign decoration = section.settings.top_right_decoration %}
+          {% assign decoration_class = 'top-right' %}
+        {% when 3 %}
+          {% assign decoration = section.settings.bottom_left_decoration %}
+          {% assign decoration_class = 'bottom-left' %}
+        {% when 4 %}
+          {% assign decoration = section.settings.bottom_right_decoration %}
+          {% assign decoration_class = 'bottom-right' %}
+      {% endcase %}
 
-    {% if section.settings.top_right_decoration != blank %}
-      <img
-        class="beauty-hero__decoration beauty-hero__decoration--top-right"
-        src="{{ section.settings.top_right_decoration | image_url: width: 800 }}"
-        alt=""
-        loading="lazy"
-      >
-    {% endif %}
+      {% if decoration != blank %}
+        <img
+          class="beauty-hero__decoration beauty-hero__decoration--{{ decoration_class }}"
+          src="{{ decoration | image_url: width: 800 }}"
+          alt=""
+          loading="lazy"
+          width="{{ decoration.width }}"
+          height="{{ decoration.height }}"
+        >
+      {% endif %}
+    {% endfor %}
 
-    {% if section.settings.bottom_left_decoration != blank %}
-      <img
-        class="beauty-hero__decoration beauty-hero__decoration--bottom-left"
-        src="{{ section.settings.bottom_left_decoration | image_url: width: 800 }}"
-        alt=""
-        loading="lazy"
-      >
-    {% endif %}
-
-    {% if section.settings.bottom_right_decoration != blank %}
-      <img
-        class="beauty-hero__decoration beauty-hero__decoration--bottom-right"
-        src="{{ section.settings.bottom_right_decoration | image_url: width: 800 }}"
-        alt=""
-        loading="lazy"
-      >
-    {% endif %}
+    <!-- FULL-WIDTH BACKGROUND / INDEPENDENT CONTENT CONTAINER -->
 
     <div class="beauty-hero__container">
+      <div class="beauty-hero__layout">
 
-      <!-- LEFT CONTENT -->
-
-      <div
-        class="beauty-hero__content"
-        style="
-          width: {{ section.settings.content_column_width }}%;
-          padding-top: {{ section.settings.content_top_spacing }}px;
-        "
-      >
-
-        {% if section.settings.eyebrow != blank %}
-          <div
-            class="beauty-hero__eyebrow"
-            style="
-              color: {{ section.settings.accent_color }};
-              font-size: {{ section.settings.eyebrow_size }}px;
-            "
-          >
-            {{ section.settings.eyebrow }}
-          </div>
-        {% endif %}
-
-        {% if section.settings.heading != blank %}
-          <h1
-            class="beauty-hero__heading"
-            style="
-              font-size: {{ section.settings.heading_size }}px;
-              line-height: {{ section.settings.heading_line_height }};
-              max-width: {{ section.settings.heading_width }}px;
-            "
-          >
-            {{ section.settings.heading }}
-          </h1>
-        {% endif %}
-
-        {% if section.settings.description != blank %}
-          <div
-            class="beauty-hero__description"
-            style="
-              font-size: {{ section.settings.description_size }}px;
-              max-width: {{ section.settings.description_width }}px;
-            "
-          >
-            {{ section.settings.description }}
-          </div>
-        {% endif %}
-
-        {% if section.settings.button_text != blank %}
-          <a
-            href="{{ section.settings.button_link | default: '#' }}"
-            class="beauty-hero__button"
-            style="
-              border-radius: {{ section.settings.button_radius }}px;
-            "
-          >
-            <span class="beauty-hero__button-text">
-              {{ section.settings.button_text }}
-            </span>
-
-            {% if section.settings.show_button_arrow %}
-              <span class="beauty-hero__button-arrow">
-                →
-              </span>
-            {% endif %}
-          </a>
-        {% endif %}
-
-      </div>
-
-
-      <!-- MAIN HERO IMAGE -->
-
-      {% if section.settings.main_image != blank %}
-        <div
-          class="beauty-hero__main-image"
-          style="
-            width: {{ section.settings.main_image_width }}%;
-            right: {{ section.settings.main_image_right }}%;
-            bottom: {{ section.settings.main_image_bottom }}px;
-          "
-        >
-          <img
-            src="{{ section.settings.main_image | image_url: width: 2400 }}"
-            alt="{{ section.settings.main_image.alt | escape }}"
-            loading="{% if section.index == 1 %}eager{% else %}lazy{% endif %}"
-          >
-        </div>
-      {% endif %}
-
-
-      <!-- RIGHT MEDIA / PRODUCT CARD -->
-
-      {% if section.settings.card_type != 'none' %}
+        <!-- LEFT CONTENT -->
 
         <div
-          class="beauty-hero__card beauty-hero__card--{{ section.settings.card_type }}"
+          class="beauty-hero__content"
           style="
-            width: {{ section.settings.card_width }}px;
-            right: {{ section.settings.card_right }}px;
-            top: {{ section.settings.card_top }}%;
-            background: {{ section.settings.card_background }};
-            border-radius: {{ section.settings.card_radius }}px;
-            box-shadow: 0 15px 45px rgba(0,0,0,{{ section.settings.card_shadow_opacity | divided_by: 100.0 }});
+            width: {{ section.settings.content_column_width }}%;
+            padding-top: {{ section.settings.content_top_spacing }}px;
           "
         >
-
-          {% if section.settings.card_type == 'image' %}
-
-            {% if section.settings.card_image != blank %}
-
-              <div class="beauty-hero__card-media">
-
-                {% if section.settings.card_link != blank %}
-                  <a
-                    href="{{ section.settings.card_link }}"
-                    {% if section.settings.card_open_new_tab %}
-                      target="_blank"
-                      rel="noopener"
-                    {% endif %}
-                    class="beauty-hero__card-link"
-                  >
-                {% endif %}
-
-                <img
-                  src="{{ section.settings.card_image | image_url: width: 1200 }}"
-                  alt="{{ section.settings.card_image.alt | escape }}"
-                  loading="lazy"
-                >
-
-                {% if section.settings.show_play_button %}
-                  <span
-                    class="beauty-hero__play"
-                    style="
-                      background: {{ section.settings.play_background }};
-                      color: {{ section.settings.play_icon_color }};
-                      width: {{ section.settings.play_size }}px;
-                      height: {{ section.settings.play_size }}px;
-                    "
-                  >
-                    <svg
-                      width="16"
-                      height="18"
-                      viewBox="0 0 16 18"
-                      fill="none"
-                      xmlns="http://www.w3.org/2000/svg"
-                    >
-                      <path
-                        d="M15 9L1 17V1L15 9Z"
-                        fill="currentColor"
-                      />
-                    </svg>
-                  </span>
-                {% endif %}
-
-                {% if section.settings.card_link != blank %}
-                  </a>
-                {% endif %}
-
-              </div>
-
-            {% endif %}
-
-
-          {% elsif section.settings.card_type == 'video' %}
-
-            {% if section.settings.card_video != blank %}
-
-              <div class="beauty-hero__card-media beauty-hero__card-video">
-
-                {{
-                  section.settings.card_video
-                  | video_tag:
-                    autoplay: true,
-                    loop: true,
-                    muted: true,
-                    controls: false,
-                    playsinline: true
-                }}
-
-                {% if section.settings.show_video_play_overlay %}
-                  <span
-                    class="beauty-hero__play"
-                    style="
-                      background: {{ section.settings.play_background }};
-                      color: {{ section.settings.play_icon_color }};
-                      width: {{ section.settings.play_size }}px;
-                      height: {{ section.settings.play_size }}px;
-                    "
-                  >
-                    <svg
-                      width="16"
-                      height="18"
-                      viewBox="0 0 16 18"
-                      fill="none"
-                      xmlns="http://www.w3.org/2000/svg"
-                    >
-                      <path
-                        d="M15 9L1 17V1L15 9Z"
-                        fill="currentColor"
-                      />
-                    </svg>
-                  </span>
-                {% endif %}
-
-              </div>
-
-            {% endif %}
-
-
-          {% elsif section.settings.card_type == 'product' %}
-
-            {% assign card_product = section.settings.card_product %}
-
-            {% if card_product != blank %}
-
-              <a
-                href="{{ card_product.url }}"
-                class="beauty-hero__product-link"
-              >
-
-                <div class="beauty-hero__product-image">
-
-                  {% if card_product.featured_image != blank %}
-                    <img
-                      src="{{ card_product.featured_image | image_url: width: 1000 }}"
-                      alt="{{ card_product.featured_image.alt | default: card_product.title | escape }}"
-                      loading="lazy"
-                    >
-                  {% endif %}
-
-                </div>
-
-                <div class="beauty-hero__product-content">
-
-                  {% if section.settings.product_show_vendor and card_product.vendor != blank %}
-                    <div class="beauty-hero__product-vendor">
-                      {{ card_product.vendor }}
-                    </div>
-                  {% endif %}
-
-                  <h3 class="beauty-hero__product-title">
-                    {{ card_product.title }}
-                  </h3>
-
-                  {% if section.settings.product_show_price %}
-                    <div class="beauty-hero__product-price">
-                      {{ card_product.price | money }}
-                    </div>
-                  {% endif %}
-
-                  {% if section.settings.product_button_text != blank %}
-                    <span class="beauty-hero__product-button">
-                      {{ section.settings.product_button_text }}
-                      <span>→</span>
-                    </span>
-                  {% endif %}
-
-                </div>
-
-              </a>
-
-            {% endif %}
-
-          {% endif %}
-
-
-          {% if section.settings.card_text != blank %}
+          {% if section.settings.eyebrow != blank %}
             <div
-              class="beauty-hero__card-text"
+              class="beauty-hero__eyebrow"
               style="
-                font-size: {{ section.settings.card_text_size }}px;
-                color: {{ section.settings.card_text_color }};
+                color: {{ section.settings.accent_color }};
+                font-size: {{ section.settings.eyebrow_size }}px;
               "
             >
-              {{ section.settings.card_text }}
+              {{ section.settings.eyebrow | escape }}
             </div>
           {% endif %}
 
+          {% if section.settings.heading != blank %}
+            <h1
+              class="beauty-hero__heading"
+              style="
+                font-size: {{ section.settings.heading_size }}px;
+                line-height: {{ section.settings.heading_line_height }};
+                max-width: {{ section.settings.heading_width }}px;
+              "
+            >
+              {{ section.settings.heading | escape | newline_to_br }}
+            </h1>
+          {% endif %}
+
+          {% if section.settings.description != blank %}
+            <div
+              class="beauty-hero__description"
+              style="
+                font-size: {{ section.settings.description_size }}px;
+                max-width: {{ section.settings.description_width }}px;
+              "
+            >
+              {{ section.settings.description }}
+            </div>
+          {% endif %}
+
+          {% if section.settings.button_text != blank %}
+            <a
+              href="{{ section.settings.button_link | default: '#' }}"
+              class="beauty-hero__button"
+              style="border-radius: {{ section.settings.button_radius }}px;"
+            >
+              <span class="beauty-hero__button-text">
+                {{ section.settings.button_text | escape }}
+              </span>
+
+              {% if section.settings.show_button_arrow %}
+                <span class="beauty-hero__button-arrow" aria-hidden="true">
+                  →
+                </span>
+              {% endif %}
+            </a>
+          {% endif %}
         </div>
 
-      {% endif %}
+        <!-- MAIN HERO IMAGE -->
 
+        {% if section.settings.main_image != blank %}
+          <div
+            class="beauty-hero__main-image"
+            style="
+              width: {{ section.settings.main_image_width }}%;
+              right: {{ section.settings.main_image_right }}%;
+              bottom: {{ section.settings.main_image_bottom }}px;
+            "
+          >
+            <img
+              src="{{ section.settings.main_image | image_url: width: 2400 }}"
+              alt="{{ section.settings.main_image.alt | default: section.settings.heading | escape }}"
+              loading="{% if section.index == 1 %}eager{% else %}lazy{% endif %}"
+              width="{{ section.settings.main_image.width }}"
+              height="{{ section.settings.main_image.height }}"
+            >
+          </div>
+        {% endif %}
+
+        <!-- RIGHT CARD -->
+
+        {% if section.settings.card_type != 'none' %}
+          <div
+            class="beauty-hero__card beauty-hero__card--{{ section.settings.card_type }}"
+            style="
+              width: {{ section.settings.card_width }}px;
+              right: {{ section.settings.card_right }}px;
+              top: {{ section.settings.card_top }}%;
+              background: {{ section.settings.card_background }};
+              border-radius: {{ section.settings.card_radius }}px;
+              box-shadow: 0 15px 45px rgba(0,0,0,{{ section.settings.card_shadow_opacity | divided_by: 100.0 }});
+            "
+          >
+
+            {% if section.settings.card_type == 'image' %}
+              {% if section.settings.card_image != blank %}
+                <div class="beauty-hero__card-media">
+                  {% if section.settings.card_link != blank %}
+                    <a
+                      href="{{ section.settings.card_link }}"
+                      class="beauty-hero__card-link"
+                      {% if section.settings.card_open_new_tab %}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                      {% endif %}
+                    >
+                  {% endif %}
+
+                  <img
+                    src="{{ section.settings.card_image | image_url: width: 1200 }}"
+                    alt="{{ section.settings.card_image.alt | escape }}"
+                    loading="lazy"
+                    width="{{ section.settings.card_image.width }}"
+                    height="{{ section.settings.card_image.height }}"
+                  >
+
+                  {% if section.settings.show_play_button %}
+                    <span
+                      class="beauty-hero__play"
+                      style="
+                        background: {{ section.settings.play_background }};
+                        color: {{ section.settings.play_icon_color }};
+                        width: {{ section.settings.play_size }}px;
+                        height: {{ section.settings.play_size }}px;
+                      "
+                      aria-hidden="true"
+                    >
+                      <svg width="16" height="18" viewBox="0 0 16 18" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M15 9L1 17V1L15 9Z" fill="currentColor"/>
+                      </svg>
+                    </span>
+                  {% endif %}
+
+                  {% if section.settings.card_link != blank %}
+                    </a>
+                  {% endif %}
+                </div>
+              {% endif %}
+
+            {% elsif section.settings.card_type == 'video' %}
+              {% if section.settings.card_video != blank %}
+                <div class="beauty-hero__card-media beauty-hero__card-video">
+                  {{
+                    section.settings.card_video
+                    | video_tag:
+                      autoplay: true,
+                      loop: true,
+                      muted: true,
+                      controls: false,
+                      playsinline: true
+                  }}
+
+                  {% if section.settings.show_video_play_overlay %}
+                    <span
+                      class="beauty-hero__play"
+                      style="
+                        background: {{ section.settings.play_background }};
+                        color: {{ section.settings.play_icon_color }};
+                        width: {{ section.settings.play_size }}px;
+                        height: {{ section.settings.play_size }}px;
+                      "
+                      aria-hidden="true"
+                    >
+                      <svg width="16" height="18" viewBox="0 0 16 18" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M15 9L1 17V1L15 9Z" fill="currentColor"/>
+                      </svg>
+                    </span>
+                  {% endif %}
+                </div>
+              {% endif %}
+
+            {% elsif section.settings.card_type == 'product' %}
+              {% assign card_product = section.settings.card_product %}
+
+              {% if card_product != blank %}
+                <a href="{{ card_product.url }}" class="beauty-hero__product-link">
+                  <div class="beauty-hero__product-image">
+                    {% if card_product.featured_image != blank %}
+                      <img
+                        src="{{ card_product.featured_image | image_url: width: 1000 }}"
+                        alt="{{ card_product.featured_image.alt | default: card_product.title | escape }}"
+                        loading="lazy"
+                        width="{{ card_product.featured_image.width }}"
+                        height="{{ card_product.featured_image.height }}"
+                      >
+                    {% endif %}
+                  </div>
+
+                  <div class="beauty-hero__product-content">
+                    {% if section.settings.product_show_vendor and card_product.vendor != blank %}
+                      <div class="beauty-hero__product-vendor">
+                        {{ card_product.vendor | escape }}
+                      </div>
+                    {% endif %}
+
+                    <h3 class="beauty-hero__product-title">
+                      {{ card_product.title | escape }}
+                    </h3>
+
+                    {% if section.settings.product_show_price %}
+                      <div class="beauty-hero__product-price">
+                        {{ card_product.price | money }}
+                      </div>
+                    {% endif %}
+
+                    {% if section.settings.product_button_text != blank %}
+                      <span class="beauty-hero__product-button">
+                        {{ section.settings.product_button_text | escape }}
+                        <span aria-hidden="true">→</span>
+                      </span>
+                    {% endif %}
+                  </div>
+                </a>
+              {% endif %}
+            {% endif %}
+
+            {% if section.settings.card_text != blank %}
+              <div
+                class="beauty-hero__card-text"
+                style="
+                  font-size: {{ section.settings.card_text_size }}px;
+                  color: {{ section.settings.card_text_color }};
+                "
+              >
+                {{ section.settings.card_text | escape | newline_to_br }}
+              </div>
+            {% endif %}
+          </div>
+        {% endif %}
+
+      </div>
     </div>
   </div>
+</section>
 
 
-  <style>
+<style>
+  /* =========================================
+     BEAUTY HERO — FULL VIEWPORT WIDTH
+  ========================================= */
 
-    #{{ section_id }} {
-      position: relative;
-      width: 100%;
-      overflow: hidden;
-      background: var(--hero-bg);
-      color: var(--hero-text);
+  #{{ section_id }} {
+    position: relative !important;
+    display: block !important;
+
+    width: 100vw !important;
+    max-width: none !important;
+
+    margin-left: calc(50% - 50vw) !important;
+    margin-right: calc(50% - 50vw) !important;
+
+    padding: 0 !important;
+    overflow: hidden;
+
+    background: var(--hero-bg);
+    color: var(--hero-text);
+
+    box-sizing: border-box;
+    isolation: isolate;
+  }
+
+  #{{ section_id }} *,
+  #{{ section_id }} *::before,
+  #{{ section_id }} *::after {
+    box-sizing: border-box;
+  }
+
+  /* FULL-WIDTH OUTER WRAPPERS */
+
+  #{{ section_id }} .beauty-hero__inner,
+  #{{ section_id }} .beauty-hero__container {
+    position: relative;
+    width: 100%;
+    max-width: none;
+    min-height: var(--hero-height);
+    margin: 0;
+    padding: 0;
+  }
+
+  /* CENTERED CONTENT INSIDE FULL-WIDTH BACKGROUND */
+
+  #{{ section_id }} .beauty-hero__layout {
+    position: relative;
+    width: 1440px;
+    max-width: var(--hero-max-width);
+    min-height: var(--hero-height);
+    margin: 0 auto;
+    padding-left: var(--hero-content-padding);
+    padding-right: var(--hero-content-padding);
+  }
+
+  /* BACKGROUND TEXT */
+
+  #{{ section_id }} .beauty-hero__background-text {
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 100%;
+    text-align: center;
+    font-family: Inter, "Times New Roman", serif;
+    font-weight: 700;
+    line-height: .8;
+    white-space: nowrap;
+    pointer-events: none;
+    user-select: none;
+    z-index: 0;
+  }
+
+  /* DECORATIONS */
+
+  #{{ section_id }} .beauty-hero__decoration {
+    position: absolute;
+    max-width: none;
+    height: auto;
+    pointer-events: none;
+    user-select: none;
+    z-index: 1;
+  }
+
+  #{{ section_id }} .beauty-hero__decoration--top-left {
+    top: 0;
+    left: 0;
+    width: 150px;
+  }
+
+  #{{ section_id }} .beauty-hero__decoration--top-right {
+    top: 0;
+    right: 0;
+    width: 150px;
+  }
+
+  #{{ section_id }} .beauty-hero__decoration--bottom-left {
+    bottom: 15px;
+    left: 20px;
+    width: 100px;
+  }
+
+  #{{ section_id }} .beauty-hero__decoration--bottom-right {
+    right: 0;
+    bottom: 0;
+    width: 180px;
+  }
+
+  /* LEFT CONTENT */
+
+  #{{ section_id }} .beauty-hero__content {
+    position: absolute;
+    top: 0;
+    left: var(--hero-content-padding);
+    z-index: 5;
+    box-sizing: border-box;
+  }
+
+  #{{ section_id }} .beauty-hero__eyebrow {
+    margin-bottom: 18px;
+    font-weight: 500;
+    line-height: 1.3;
+  }
+
+  #{{ section_id }} .beauty-hero__heading {
+    margin: 0;
+    font-family: Inter, "Times New Roman", serif;
+    font-weight: 700;
+    letter-spacing: -.035em;
+    color: var(--hero-text);
+    overflow-wrap: anywhere;
+  }
+
+  #{{ section_id }} .beauty-hero__description {
+    margin-top: 25px;
+    color: var(--hero-text);
+    opacity: .72;
+    line-height: 1.65;
+  }
+
+  #{{ section_id }} .beauty-hero__description p {
+    margin: 0 0 10px;
+  }
+
+  #{{ section_id }} .beauty-hero__description p:last-child {
+    margin-bottom: 0;
+  }
+
+  /* BUTTON */
+
+  #{{ section_id }} .beauty-hero__button {
+    display: inline-flex;
+    align-items: center;
+    gap: 15px;
+    margin-top: 34px;
+    padding: 7px 8px 7px 22px;
+    text-decoration: none;
+    font-family: inherit;
+    font-size: 15px;
+    font-weight: 600;
+    line-height: 1;
+    color: var(--hero-button-text);
+    background: var(--hero-button-bg);
+    overflow: hidden;
+    transition: background-color .35s ease,
+                color .35s ease,
+                transform .35s ease,
+                box-shadow .35s ease;
+  }
+
+  #{{ section_id }} .beauty-hero__button-text {
+    transition: color .35s ease, transform .35s ease;
+  }
+
+  #{{ section_id }} .beauty-hero__button-arrow {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    width: 38px;
+    height: 38px;
+    border-radius: 50%;
+    font-size: 20px;
+    line-height: 1;
+    background: var(--hero-arrow-bg);
+    color: var(--hero-arrow-color);
+    transition: background-color .35s ease,
+                color .35s ease,
+                transform .35s ease;
+  }
+
+  #{{ section_id }} .beauty-hero__button:hover {
+    background: var(--hero-arrow-bg);
+    color: var(--hero-arrow-color);
+    transform: translateY(-3px);
+    box-shadow: 0 12px 28px rgba(0,0,0,.16);
+  }
+
+  #{{ section_id }} .beauty-hero__button:hover .beauty-hero__button-text {
+    color: var(--hero-arrow-color);
+    transform: translateX(2px);
+  }
+
+  #{{ section_id }} .beauty-hero__button:hover .beauty-hero__button-arrow {
+    background: var(--hero-button-bg);
+    color: var(--hero-button-text);
+  }
+
+  /* MAIN IMAGE */
+
+  #{{ section_id }} .beauty-hero__main-image {
+    position: absolute;
+    z-index: 3;
+    pointer-events: none;
+    line-height: 0;
+  }
+
+  #{{ section_id }} .beauty-hero__main-image img {
+    display: block;
+    width: 100%;
+    height: auto;
+    max-height: calc(var(--hero-height) + 100px);
+    object-fit: contain;
+    object-position: center bottom;
+  }
+
+  /* FLOATING CARD */
+
+  #{{ section_id }} .beauty-hero__card {
+    position: absolute;
+    z-index: 8;
+    padding: 14px;
+    box-sizing: border-box;
+    animation: beautyCardFloat-{{ section.id }} 5s ease-in-out infinite;
+  }
+
+  @keyframes beautyCardFloat-{{ section.id }} {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-7px); }
+  }
+
+  #{{ section_id }} .beauty-hero__card-media {
+    position: relative;
+    overflow: hidden;
+    border-radius: max(0px, calc(var(--hero-radius) - 4px));
+  }
+
+  #{{ section_id }} .beauty-hero__card-link {
+    position: relative;
+    display: block;
+    line-height: 0;
+  }
+
+  #{{ section_id }} .beauty-hero__card-media img {
+    display: block;
+    width: 100%;
+    height: auto;
+    aspect-ratio: 1.7 / 1;
+    object-fit: cover;
+  }
+
+  /* VIDEO */
+
+  #{{ section_id }} .beauty-hero__card-video {
+    position: relative;
+    line-height: 0;
+    aspect-ratio: 1.7 / 1;
+  }
+
+  #{{ section_id }} .beauty-hero__card-video video {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  /* PLAY BUTTON */
+
+  #{{ section_id }} .beauty-hero__play {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    z-index: 3;
+    box-shadow: 0 5px 20px rgba(0,0,0,.15);
+    transition: transform .3s ease;
+    pointer-events: none;
+  }
+
+  #{{ section_id }} .beauty-hero__card-link:hover .beauty-hero__play,
+  #{{ section_id }} .beauty-hero__card-video:hover .beauty-hero__play {
+    transform: translate(-50%, -50%) scale(1.1);
+  }
+
+  #{{ section_id }} .beauty-hero__play svg {
+    margin-left: 3px;
+  }
+
+  /* PRODUCT CARD */
+
+  #{{ section_id }} .beauty-hero__product-link {
+    display: block;
+    color: inherit;
+    text-decoration: none;
+  }
+
+  #{{ section_id }} .beauty-hero__product-image {
+    overflow: hidden;
+    border-radius: max(0px, calc(var(--hero-radius) - 4px));
+    line-height: 0;
+  }
+
+  #{{ section_id }} .beauty-hero__product-image img {
+    display: block;
+    width: 100%;
+    aspect-ratio: 1 / 1;
+    object-fit: cover;
+    transition: transform .6s ease;
+  }
+
+  #{{ section_id }} .beauty-hero__product-link:hover .beauty-hero__product-image img {
+    transform: scale(1.05);
+  }
+
+  #{{ section_id }} .beauty-hero__product-content {
+    padding: 18px 6px 6px;
+  }
+
+  #{{ section_id }} .beauty-hero__product-vendor {
+    margin-bottom: 5px;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: .12em;
+    opacity: .55;
+  }
+
+  #{{ section_id }} .beauty-hero__product-title {
+    margin: 0;
+    font-size: 18px;
+    line-height: 1.25;
+    font-weight: 600;
+  }
+
+  #{{ section_id }} .beauty-hero__product-price {
+    margin-top: 8px;
+    font-size: 15px;
+    opacity: .75;
+  }
+
+  #{{ section_id }} .beauty-hero__product-button {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    margin-top: 15px;
+    font-size: 14px;
+    font-weight: 600;
+    transition: gap .3s ease;
+  }
+
+  #{{ section_id }} .beauty-hero__product-link:hover .beauty-hero__product-button {
+    gap: 15px;
+  }
+
+  /* CARD TEXT */
+
+  #{{ section_id }} .beauty-hero__card-text {
+    padding: 20px 5px 5px;
+    text-align: center;
+    font-family: Inter, "Times New Roman", serif;
+    font-style: italic;
+    line-height: 1.55;
+  }
+
+  /* TABLET */
+
+  @media screen and (max-width: 1100px) {
+    #{{ section_id }} .beauty-hero__layout {
+      padding-left: 5%;
+      padding-right: 5%;
     }
-
-    #{{ section_id }} .beauty-hero__inner {
-      position: relative;
-      min-height: var(--hero-height);
-      width: 100%;
-      overflow: hidden;
-    }
-
-    #{{ section_id }} .beauty-hero__container {
-      position: relative;
-      width: 100%;
-      max-width: var(--hero-max-width);
-      min-height: var(--hero-height);
-      margin: 0 auto;
-    }
-
-
-    /* BACKGROUND TEXT */
-
-    #{{ section_id }} .beauty-hero__background-text {
-      position: absolute;
-      left: 50%;
-      transform: translateX(-50%);
-      width: 100%;
-      text-align: center;
-      font-family: Inter, "Times New Roman", serif;
-      font-weight: 700;
-      line-height: 0.8;
-      white-space: nowrap;
-      pointer-events: none;
-      user-select: none;
-      z-index: 0;
-    }
-
-
-    /* DECORATIONS */
-
-    #{{ section_id }} .beauty-hero__decoration {
-      position: absolute;
-      pointer-events: none;
-      user-select: none;
-      z-index: 1;
-      max-width: none;
-    }
-
-    #{{ section_id }} .beauty-hero__decoration--top-left {
-      top: 0;
-      left: 0;
-      width: 150px;
-    }
-
-    #{{ section_id }} .beauty-hero__decoration--top-right {
-      top: 0;
-      right: 0;
-      width: 150px;
-    }
-
-    #{{ section_id }} .beauty-hero__decoration--bottom-left {
-      bottom: 15px;
-      left: 20px;
-      width: 100px;
-    }
-
-    #{{ section_id }} .beauty-hero__decoration--bottom-right {
-      bottom: 0;
-      right: 0;
-      width: 180px;
-    }
-
-
-    /* LEFT CONTENT */
 
     #{{ section_id }} .beauty-hero__content {
-      position: absolute;
-      left: 1%;
-      top: 0;
-      z-index: 5;
-      box-sizing: border-box;
-    }
-
-    #{{ section_id }} .beauty-hero__eyebrow {
-      margin-bottom: 18px;
-      font-weight: 500;
-      line-height: 1.3;
+      left: 5%;
+      width: 42% !important;
     }
 
     #{{ section_id }} .beauty-hero__heading {
-      margin: 0;
-      font-family: Inter, "Times New Roman", serif;
-      font-weight: 700;
-      letter-spacing: -0.035em;
-      color: var(--hero-text);
+      font-size: min(58px, 5vw) !important;
+    }
+
+    #{{ section_id }} .beauty-hero__main-image {
+      width: 55% !important;
+      right: 19% !important;
+    }
+
+    #{{ section_id }} .beauty-hero__card {
+      width: 270px !important;
+      right: 2% !important;
+    }
+
+    #{{ section_id }} .beauty-hero__decoration--top-left,
+    #{{ section_id }} .beauty-hero__decoration--top-right {
+      width: 100px;
+    }
+  }
+
+  /* MOBILE */
+
+  @media screen and (max-width: 749px) {
+    #{{ section_id }} .beauty-hero__inner,
+    #{{ section_id }} .beauty-hero__container,
+    #{{ section_id }} .beauty-hero__layout {
+      min-height: var(--hero-mobile-height);
+    }
+
+    #{{ section_id }} .beauty-hero__layout {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding-left: 0;
+      padding-right: 0;
+    }
+
+    #{{ section_id }} .beauty-hero__background-text {
+      font-size: 110px !important;
+      top: 3% !important;
+    }
+
+    #{{ section_id }} .beauty-hero__content {
+      position: relative;
+      top: auto;
+      left: auto;
+      width: 90% !important;
+      padding-top: 50px !important;
+      text-align: center;
+      z-index: 5;
+    }
+
+    #{{ section_id }} .beauty-hero__eyebrow {
+      margin-bottom: 12px;
+    }
+
+    #{{ section_id }} .beauty-hero__heading {
+      max-width: 100% !important;
+      font-size: 42px !important;
+      line-height: 1.03 !important;
+      margin-left: auto;
+      margin-right: auto;
     }
 
     #{{ section_id }} .beauty-hero__description {
-      margin-top: 25px;
-      color: var(--hero-text);
-      opacity: 0.72;
-      line-height: 1.65;
-    }
-
-
-    /* BUTTON */
-
-    #{{ section_id }} .beauty-hero__button {
-      display: inline-flex;
-      align-items: center;
-      gap: 15px;
-      margin-top: 34px;
-      padding: 7px 8px 7px 22px;
-      text-decoration: none;
-      font-family: inherit;
-      font-size: 15px;
-      font-weight: 600;
-      line-height: 1;
-      color: var(--hero-button-text);
-      background: var(--hero-button-bg);
-      overflow: hidden;
-      transition:
-        background-color 0.35s ease,
-        color 0.35s ease,
-        transform 0.35s cubic-bezier(.22,1,.36,1),
-        box-shadow 0.35s ease;
-    }
-
-    #{{ section_id }} .beauty-hero__button-text {
-      transition:
-        color 0.35s ease,
-        transform 0.35s cubic-bezier(.22,1,.36,1);
-    }
-
-    #{{ section_id }} .beauty-hero__button-arrow {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      flex-shrink: 0;
-      width: 38px;
-      height: 38px;
-      border-radius: 50%;
-      font-size: 20px;
-      line-height: 1;
-      background: var(--hero-arrow-bg);
-      color: var(--hero-arrow-color);
-      transition:
-        background-color 0.35s ease,
-        color 0.35s ease,
-        transform 0.35s cubic-bezier(.22,1,.36,1);
-    }
-
-    /* Button hover color swap */
-
-    #{{ section_id }} .beauty-hero__button:hover {
-      background: var(--hero-arrow-bg);
-      color: var(--hero-arrow-color);
-      transform: translateY(-3px);
-      box-shadow: 0 12px 28px rgba(0,0,0,0.16);
-    }
-
-    #{{ section_id }} .beauty-hero__button:hover .beauty-hero__button-text {
-      color: var(--hero-arrow-color);
-      transform: translateX(2px);
-    }
-
-    #{{ section_id }} .beauty-hero__button:hover .beauty-hero__button-arrow {
-      background: var(--hero-button-bg);
-      color: var(--hero-button-text);
-      
-    }
-
-
-    /* MAIN IMAGE */
-
-    #{{ section_id }} .beauty-hero__main-image {
-      position: absolute;
-      z-index: 3;
-      pointer-events: none;
-      line-height: 0;
-    }
-
-    #{{ section_id }} .beauty-hero__main-image img {
-      display: block;
-      width: 100%;
-      height: auto;
-      max-height: calc(var(--hero-height) + 100px);
-      object-fit: contain;
-      object-position: center bottom;
-    }
-
-
-    /* CARD */
-
-    #{{ section_id }} .beauty-hero__card {
-      position: absolute;
-      z-index: 8;
-      padding: 14px;
-      box-sizing: border-box;
-      animation: beautyCardFloat 5s ease-in-out infinite;
-    }
-
-    @keyframes beautyCardFloat {
-      0%,
-      100% {
-        transform: translateY(0);
-      }
-
-      50% {
-        transform: translateY(-7px);
-      }
-    }
-
-    #{{ section_id }} .beauty-hero__card-media {
-      position: relative;
-      overflow: hidden;
-      border-radius: calc(var(--hero-radius) - 4px);
-    }
-
-    #{{ section_id }} .beauty-hero__card-link {
-      position: relative;
-      display: block;
-      line-height: 0;
-    }
-
-    #{{ section_id }} .beauty-hero__card-media img {
-      display: block;
-      width: 100%;
-      height: auto;
-      aspect-ratio: 1.7 / 1;
-      object-fit: cover;
-    }
-
-
-    /* VIDEO */
-
-    #{{ section_id }} .beauty-hero__card-video {
-      line-height: 0;
-      aspect-ratio: 1.7 / 1;
-    }
-
-    #{{ section_id }} .beauty-hero__card-video video {
-      display: block;
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-    }
-
-
-    /* PLAY BUTTON */
-
-    #{{ section_id }} .beauty-hero__play {
-      position: absolute;
-      left: 50%;
-      top: 50%;
-      transform: translate(-50%, -50%);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      border-radius: 50%;
-      z-index: 3;
-      box-shadow: 0 5px 20px rgba(0,0,0,0.15);
-      transition: transform 0.3s ease;
-    }
-
-    #{{ section_id }} .beauty-hero__card-link:hover .beauty-hero__play,
-    #{{ section_id }} .beauty-hero__card-video:hover .beauty-hero__play {
-      transform: translate(-50%, -50%) scale(1.1);
-    }
-
-    #{{ section_id }} .beauty-hero__play svg {
-      margin-left: 3px;
-    }
-
-
-    /* PRODUCT CARD */
-
-    #{{ section_id }} .beauty-hero__product-link {
-      display: block;
-      color: inherit;
-      text-decoration: none;
-    }
-
-    #{{ section_id }} .beauty-hero__product-image {
-      overflow: hidden;
-      border-radius: calc(var(--hero-radius) - 4px);
-      line-height: 0;
-    }
-
-    #{{ section_id }} .beauty-hero__product-image img {
-      display: block;
-      width: 100%;
-      aspect-ratio: 1 / 1;
-      object-fit: cover;
-      transition: transform 0.6s cubic-bezier(.22,1,.36,1);
-    }
-
-    #{{ section_id }} .beauty-hero__product-link:hover
-    .beauty-hero__product-image img {
-      transform: scale(1.05);
-    }
-
-    #{{ section_id }} .beauty-hero__product-content {
-      padding: 18px 6px 6px;
-    }
-
-    #{{ section_id }} .beauty-hero__product-vendor {
-      margin-bottom: 5px;
-      font-size: 11px;
-      text-transform: uppercase;
-      letter-spacing: 0.12em;
-      opacity: 0.55;
-    }
-
-    #{{ section_id }} .beauty-hero__product-title {
-      margin: 0;
-      font-size: 18px;
-      line-height: 1.25;
-      font-weight: 600;
-    }
-
-    #{{ section_id }} .beauty-hero__product-price {
-      margin-top: 8px;
-      font-size: 15px;
-      opacity: 0.75;
-    }
-
-    #{{ section_id }} .beauty-hero__product-button {
-      display: inline-flex;
-      align-items: center;
-      gap: 10px;
-      margin-top: 15px;
-      font-size: 14px;
-      font-weight: 600;
-      transition: gap 0.3s ease;
-    }
-
-    #{{ section_id }} .beauty-hero__product-link:hover
-    .beauty-hero__product-button {
-      gap: 15px;
-    }
-
-
-    /* CARD TEXT */
-
-    #{{ section_id }} .beauty-hero__card-text {
-      padding: 20px 5px 5px;
-      text-align: center;
-      font-family: Inter, "Times New Roman", serif;
-      font-style: italic;
+      max-width: 100% !important;
+      margin: 18px auto 0;
+      font-size: 14px !important;
       line-height: 1.55;
     }
 
-
-    /* TABLET */
-
-    @media screen and (max-width: 1100px) {
-
-      #{{ section_id }} .beauty-hero__content {
-        left: 5%;
-        width: 42% !important;
-      }
-
-      #{{ section_id }} .beauty-hero__heading {
-        font-size: min(58px, 5vw) !important;
-      }
-
-      #{{ section_id }} .beauty-hero__main-image {
-        width: 55% !important;
-        right: 19% !important;
-      }
-
-      #{{ section_id }} .beauty-hero__card {
-        width: 270px !important;
-        right: 2% !important;
-      }
-
-      #{{ section_id }} .beauty-hero__decoration--top-left {
-        width: 100px;
-      }
-
-      #{{ section_id }} .beauty-hero__decoration--top-right {
-        width: 100px;
-      }
+    #{{ section_id }} .beauty-hero__button {
+      margin-top: 25px;
     }
 
-
-    /* MOBILE */
-
-    @media screen and (max-width: 749px) {
-
-      #{{ section_id }} {
-        overflow: hidden;
-      }
-
-      #{{ section_id }} .beauty-hero__inner {
-        min-height: var(--hero-mobile-height);
-      }
-
-      #{{ section_id }} .beauty-hero__container {
-        min-height: var(--hero-mobile-height);
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-      }
-
-      #{{ section_id }} .beauty-hero__background-text {
-        font-size: 110px !important;
-        top: 3% !important;
-      }
-
-
-      /* CONTENT */
-
-      #{{ section_id }} .beauty-hero__content {
-        position: relative;
-        top: auto;
-        left: auto;
-        width: 90% !important;
-        padding-top: 50px !important;
-        text-align: center;
-        z-index: 5;
-      }
-
-      #{{ section_id }} .beauty-hero__eyebrow {
-        margin-bottom: 12px;
-      }
-
-      #{{ section_id }} .beauty-hero__heading {
-        max-width: 100% !important;
-        font-size: 42px !important;
-        line-height: 1.03 !important;
-      }
-
-      #{{ section_id }} .beauty-hero__description {
-        max-width: 100% !important;
-        margin: 18px auto 0;
-        font-size: 14px !important;
-        line-height: 1.55;
-      }
-
-      #{{ section_id }} .beauty-hero__button {
-        margin-top: 25px;
-      }
-
-
-      /* MAIN IMAGE */
-
-      #{{ section_id }} .beauty-hero__main-image {
-        position: relative;
-        right: auto !important;
-        bottom: auto !important;
-        width: 92% !important;
-        margin-top: 20px;
-        order: 2;
-      }
-
-      #{{ section_id }} .beauty-hero__main-image img {
-        max-height: none;
-        width: 100%;
-      }
-
-
-      /* HIDE CARD ON MOBILE */
-
-      #{{ section_id }} .beauty-hero__card {
-        display: none !important;
-      }
-
-
-      /* DECORATIONS */
-
-      #{{ section_id }} .beauty-hero__decoration--top-left {
-        width: 70px;
-      }
-
-      #{{ section_id }} .beauty-hero__decoration--top-right {
-        width: 70px;
-      }
-
-      #{{ section_id }} .beauty-hero__decoration--bottom-left {
-        width: 60px;
-        bottom: 10px;
-      }
-
-      #{{ section_id }} .beauty-hero__decoration--bottom-right {
-        width: 90px;
-      }
+    #{{ section_id }} .beauty-hero__main-image {
+      position: relative;
+      right: auto !important;
+      bottom: auto !important;
+      width: 92% !important;
+      margin-top: 20px;
+      order: 2;
+      align-self: center;
     }
 
-
-    /* SMALL MOBILE */
-
-    @media screen and (max-width: 480px) {
-
-      #{{ section_id }} .beauty-hero__content {
-        width: 92% !important;
-        padding-top: 40px !important;
-      }
-
-      #{{ section_id }} .beauty-hero__heading {
-        font-size: 36px !important;
-      }
-
-      #{{ section_id }} .beauty-hero__main-image {
-        width: 100% !important;
-      }
-
-      #{{ section_id }} .beauty-hero__button {
-        font-size: 14px;
-      }
-
-      #{{ section_id }} .beauty-hero__button-arrow {
-        width: 34px;
-        height: 34px;
-      }
+    #{{ section_id }} .beauty-hero__main-image img {
+      max-height: none;
+      width: 100%;
     }
 
-  </style>
-</section>
+    #{{ section_id }} .beauty-hero__card {
+      display: none !important;
+    }
+
+    #{{ section_id }} .beauty-hero__decoration--top-left,
+    #{{ section_id }} .beauty-hero__decoration--top-right {
+      width: 70px;
+    }
+
+    #{{ section_id }} .beauty-hero__decoration--bottom-left {
+      width: 60px;
+      bottom: 10px;
+    }
+
+    #{{ section_id }} .beauty-hero__decoration--bottom-right {
+      width: 90px;
+    }
+  }
+
+  /* SMALL MOBILE */
+
+  @media screen and (max-width: 480px) {
+    #{{ section_id }} .beauty-hero__content {
+      width: 92% !important;
+      padding-top: 40px !important;
+    }
+
+    #{{ section_id }} .beauty-hero__heading {
+      font-size: 36px !important;
+    }
+
+    #{{ section_id }} .beauty-hero__main-image {
+      width: 100% !important;
+    }
+
+    #{{ section_id }} .beauty-hero__button {
+      font-size: 14px;
+    }
+
+    #{{ section_id }} .beauty-hero__button-arrow {
+      width: 34px;
+      height: 34px;
+    }
+  }
+
+  /* REDUCED MOTION */
+
+  @media (prefers-reduced-motion: reduce) {
+    #{{ section_id }} .beauty-hero__card {
+      animation: none;
+    }
+
+    #{{ section_id }} .beauty-hero__button,
+    #{{ section_id }} .beauty-hero__button-text,
+    #{{ section_id }} .beauty-hero__button-arrow,
+    #{{ section_id }} .beauty-hero__product-image img {
+      transition: none;
+    }
+  }
+</style>
 
 
 {% schema %}
@@ -896,7 +861,6 @@
   "tag": "section",
   "class": "custom-beauty-hero-section",
   "settings": [
-
     {
       "type": "header",
       "content": "General"
@@ -922,11 +886,21 @@
     {
       "type": "range",
       "id": "content_width",
-      "label": "Maximum content width",
+      "label": "Content container maximum width",
       "min": 1000,
       "max": 1800,
       "step": 10,
-      "default": 1600,
+      "default": 1400,
+      "unit": "px"
+    },
+    {
+      "type": "range",
+      "id": "container_side_padding",
+      "label": "Container side padding",
+      "min": 0,
+      "max": 80,
+      "step": 2,
+      "default": 24,
       "unit": "px"
     },
     {
@@ -949,8 +923,6 @@
       "default": 850,
       "unit": "px"
     },
-
-
     {
       "type": "header",
       "content": "Background Typography"
@@ -997,8 +969,6 @@
       "default": 0,
       "unit": "%"
     },
-
-
     {
       "type": "header",
       "content": "Left Content"
@@ -1100,8 +1070,6 @@
       "default": 210,
       "unit": "px"
     },
-
-
     {
       "type": "header",
       "content": "Button"
@@ -1157,8 +1125,6 @@
       "default": 40,
       "unit": "px"
     },
-
-
     {
       "type": "header",
       "content": "Main Hero Image"
@@ -1198,8 +1164,6 @@
       "default": 0,
       "unit": "px"
     },
-
-
     {
       "type": "header",
       "content": "Right Card"
@@ -1209,26 +1173,13 @@
       "id": "card_type",
       "label": "Card type",
       "options": [
-        {
-          "value": "none",
-          "label": "None"
-        },
-        {
-          "value": "image",
-          "label": "Image"
-        },
-        {
-          "value": "video",
-          "label": "Video"
-        },
-        {
-          "value": "product",
-          "label": "Product"
-        }
+        { "value": "none", "label": "None" },
+        { "value": "image", "label": "Image" },
+        { "value": "video", "label": "Video" },
+        { "value": "product", "label": "Product" }
       ],
       "default": "image"
     },
-
     {
       "type": "image_picker",
       "id": "card_image",
@@ -1237,7 +1188,7 @@
     {
       "type": "url",
       "id": "card_link",
-      "label": "Image link / video URL"
+      "label": "Image link"
     },
     {
       "type": "checkbox",
@@ -1245,7 +1196,6 @@
       "label": "Open image link in new tab",
       "default": false
     },
-
     {
       "type": "video",
       "id": "card_video",
@@ -1257,7 +1207,6 @@
       "label": "Show video play icon",
       "default": false
     },
-
     {
       "type": "product",
       "id": "card_product",
@@ -1281,7 +1230,6 @@
       "label": "Product button text",
       "default": "View Product"
     },
-
     {
       "type": "textarea",
       "id": "card_text",
@@ -1360,8 +1308,6 @@
       "default": 16,
       "unit": "px"
     },
-
-
     {
       "type": "header",
       "content": "Play Button"
@@ -1394,8 +1340,6 @@
       "default": 50,
       "unit": "px"
     },
-
-
     {
       "type": "header",
       "content": "Decorative Images"
@@ -1420,12 +1364,10 @@
       "id": "bottom_right_decoration",
       "label": "Bottom right decoration"
     }
-
   ],
-
   "presets": [
     {
-      "name": "Hero"
+      "name": "Custom Beauty Hero"
     }
   ]
 }
