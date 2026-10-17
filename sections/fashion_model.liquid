@@ -2,6 +2,8 @@
   .et-section-{{ section.id }} {
     padding: {{ section.settings.padding_top_mobile }}px 20px {{ section.settings.padding_bottom_mobile }}px;
     background-color: {{ section.settings.bg_color }};
+    box-sizing: border-box;
+    width: 100%;
   }
 
   @media screen and (min-width: 769px) {
@@ -13,23 +15,8 @@
   .et-container-{{ section.id }} {
     max-width: {{ section.settings.max_width }}px;
     margin: 0 auto;
-  }
-
-  .et-heading-{{ section.id }} {
-    font-size: 28px;
-    line-height: 1.2;
-    font-weight: 500;
-    color: #111111;
-    margin: 0 0 30px 0;
-    max-width: 500px;
-    font-family: Georgia, serif;
-  }
-
-  @media screen and (min-width: 769px) {
-    .et-heading-{{ section.id }} {
-      font-size: 34px;
-      margin-bottom: 40px;
-    }
+    width: 100%;
+    box-sizing: border-box;
   }
 
   .et-content-grid-{{ section.id }} {
@@ -48,17 +35,23 @@
 
   /* LEFT SIDE IMAGE STYLES */
   .et-image-column-{{ section.id }} {
-    flex: 0 0 100%;
-    max-width: 360px;
+    flex: 0 0 auto;
     width: 100%;
+    max-width: {{ section.settings.main_image_width }}px;
+  }
+
+  @media screen and (max-width: 768px) {
+    .et-image-column-{{ section.id }} {
+      max-width: 100%;
+    }
   }
 
   .et-main-image-wrapper-{{ section.id }} {
     position: relative;
     width: 100%;
-    padding-top: 100%;
+    padding-top: {{ section.settings.image_aspect_ratio }}%;
     background-color: #a3a8ab;
-    border-radius: 4px;
+    border-radius: 8px;
     overflow: hidden;
   }
 
@@ -99,6 +92,24 @@
     display: flex;
     flex-direction: column;
     align-items: flex-start;
+    min-width: 0;
+  }
+
+  /* HEADING ABOVE AVATARS */
+  .et-heading-{{ section.id }} {
+    font-size: 26px;
+    line-height: 1.2;
+    font-weight: 500;
+    color: #111111;
+    margin: 0 0 24px 0;
+    font-family: Georgia, serif;
+  }
+
+  @media screen and (min-width: 769px) {
+    .et-heading-{{ section.id }} {
+      font-size: 34px;
+      margin-bottom: 28px;
+    }
   }
 
   /* AVATARS LIST */
@@ -110,8 +121,8 @@
   }
 
   .et-avatar-btn-{{ section.id }} {
-    width: 44px;
-    height: 44px;
+    width: {{ section.settings.avatar_size }}px;
+    height: {{ section.settings.avatar_size }}px;
     border-radius: 50%;
     border: 2px solid transparent;
     padding: 0;
@@ -144,7 +155,7 @@
   /* DYNAMIC QUOTE & DETAILS */
   .et-quote-container-{{ section.id }} {
     position: relative;
-    min-height: 140px;
+    min-height: 130px;
     width: 100%;
   }
 
@@ -160,7 +171,7 @@
   }
 
   .et-quote-text-{{ section.id }} {
-    font-size: 20px;
+    font-size: 18px;
     line-height: 1.4;
     color: #222222;
     margin: 0 0 16px 0;
@@ -170,12 +181,12 @@
 
   @media screen and (min-width: 769px) {
     .et-quote-text-{{ section.id }} {
-      font-size: 24px;
+      font-size: 22px;
     }
   }
 
   .et-author-name-{{ section.id }} {
-    font-size: 13px;
+    font-size: 14px;
     font-weight: 700;
     color: #111111;
     margin: 0;
@@ -191,10 +202,6 @@
 <div class="et-section-{{ section.id }}">
   <div class="et-container-{{ section.id }}">
     
-    {%- if section.settings.heading != blank -%}
-      <h2 class="et-heading-{{ section.id }}">{{ section.settings.heading }}</h2>
-    {%- endif -%}
-
     <div class="et-content-grid-{{ section.id }}">
       
       <!-- LEFT MAIN IMAGE -->
@@ -206,7 +213,7 @@
               <img 
                 class="et-main-img-{{ section.id }} {% if forloop.first %}active{% endif %}" 
                 data-index="{{ forloop.index0 }}"
-                src="{{ main_img | image_url: width: 800 }}" 
+                src="{{ main_img | image_url: width: 1000 }}" 
                 alt="{{ block.settings.name }}" 
                 loading="lazy"
               >
@@ -219,8 +226,12 @@
         </div>
       </div>
 
-      <!-- RIGHT DETAILS (AVATARS + QUOTES) -->
+      <!-- RIGHT DETAILS (HEADING + AVATARS + QUOTES) -->
       <div class="et-details-column-{{ section.id }}">
+        
+        {%- if section.settings.heading != blank -%}
+          <h2 class="et-heading-{{ section.id }}">{{ section.settings.heading }}</h2>
+        {%- endif -%}
         
         <!-- AVATAR BUTTONS -->
         <div class="et-avatars-list-{{ section.id }}">
@@ -233,7 +244,7 @@
               aria-label="View quote from {{ block.settings.name }}"
             >
               {%- if avatar_img != blank -%}
-                <img src="{{ avatar_img | image_url: width: 100 }}" alt="{{ block.settings.name }}" loading="lazy">
+                <img src="{{ avatar_img | image_url: width: 150 }}" alt="{{ block.settings.name }}" loading="lazy">
               {%- else -%}
                 {{ 'collection-1' | placeholder_svg_tag: 'placeholder-svg' }}
               {%- endif -%}
@@ -301,6 +312,36 @@
       "default": "Discover Why Top Fashion Models Trust Our Collections"
     },
     {
+      "type": "range",
+      "id": "main_image_width",
+      "min": 300,
+      "max": 700,
+      "step": 10,
+      "unit": "px",
+      "label": "Left Image Column Max Width (Desktop)",
+      "default": 480
+    },
+    {
+      "type": "range",
+      "id": "image_aspect_ratio",
+      "min": 80,
+      "max": 150,
+      "step": 5,
+      "unit": "%",
+      "label": "Left Image Aspect Ratio (Height %)",
+      "default": 110
+    },
+    {
+      "type": "range",
+      "id": "avatar_size",
+      "min": 36,
+      "max": 76,
+      "step": 2,
+      "unit": "px",
+      "label": "Avatar Circle Size",
+      "default": 46
+    },
+    {
       "type": "color",
       "id": "bg_color",
       "label": "Background Color",
@@ -313,7 +354,7 @@
       "max": 1400,
       "step": 20,
       "unit": "px",
-      "label": "Max Width",
+      "label": "Section Max Width",
       "default": 1100
     },
     {

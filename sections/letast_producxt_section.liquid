@@ -11,6 +11,11 @@
       "default": "Latest Fashion Arrivals"
     },
     {
+      "type": "collection",
+      "id": "collection",
+      "label": "Select Collection"
+    },
+    {
       "type": "select",
       "id": "layout_type",
       "label": "Layout Type",
@@ -246,7 +251,7 @@
 {% endschema %}
 
 {% style %}
-  .flex-section-{{ section.id }} {
+  .latest-prod-section-{{ section.id }} {
     background-color: {{ section.settings.bg_color }};
     padding-top: {{ section.settings.padding_top_desktop }}px;
     padding-bottom: {{ section.settings.padding_bottom_desktop }}px;
@@ -254,7 +259,7 @@
     box-sizing: border-box;
   }
 
-  .flex-grid-container {
+  .latest-prod-grid-container {
     width: 100%;
     max-width: 100%;
     padding: 0 40px;
@@ -262,7 +267,7 @@
     position: relative;
   }
 
-  .flex-grid-heading {
+  .latest-prod-grid-heading {
     font-size: {{ section.settings.heading_size_desktop }}px;
     font-weight: 500;
     color: {{ section.settings.heading_color }};
@@ -271,7 +276,7 @@
   }
 
   /* Force Grid Column Count from Theme Settings */
-  .flex-products-wrapper.layout-grid {
+  .latest-prod-products-wrapper.layout-grid {
     display: grid !important;
     grid-template-columns: repeat({{ section.settings.columns_desktop }}, minmax(0, 1fr)) !important;
     gap: 20px;
@@ -279,22 +284,22 @@
   }
 
   @media screen and (max-width: 768px) {
-    .flex-grid-container {
+    .latest-prod-grid-container {
       padding: 0 16px;
     }
-    .flex-products-wrapper.layout-grid {
+    .latest-prod-products-wrapper.layout-grid {
       grid-template-columns: repeat({{ section.settings.columns_mobile }}, minmax(0, 1fr)) !important;
       gap: 12px;
     }
   }
 
   /* Carousel Outer Container */
-  .flex-carousel-outer-wrapper {
+  .latest-prod-carousel-outer-wrapper {
     position: relative;
     width: 100%;
   }
 
-  .flex-products-wrapper.layout-carousel {
+  .latest-prod-products-wrapper.layout-carousel {
     display: flex;
     overflow-x: auto;
     scroll-snap-type: x mandatory;
@@ -305,23 +310,23 @@
     scrollbar-width: none;
   }
 
-  .flex-products-wrapper.layout-carousel::-webkit-scrollbar {
+  .latest-prod-products-wrapper.layout-carousel::-webkit-scrollbar {
     display: none;
   }
 
-  .flex-products-wrapper.layout-carousel .flex-product-card {
+  .latest-prod-products-wrapper.layout-carousel .latest-prod-product-card {
     flex: 0 0 calc((100% - (20px * ({{ section.settings.columns_desktop }} - 1))) / {{ section.settings.columns_desktop }});
     scroll-snap-align: start;
   }
 
   @media screen and (max-width: 768px) {
-    .flex-products-wrapper.layout-carousel .flex-product-card {
+    .latest-prod-products-wrapper.layout-carousel .latest-prod-product-card {
       flex: 0 0 calc((100% - (12px * ({{ section.settings.columns_mobile }} - 1))) / {{ section.settings.columns_mobile }});
     }
   }
 
   /* Product Card Common Styles */
-  .flex-product-card {
+  .latest-prod-product-card {
     display: flex;
     flex-direction: column;
     background: transparent;
@@ -330,7 +335,7 @@
   }
 
   /* Square Image Aspect Ratio */
-  .flex-card-image-box {
+  .latest-prod-card-image-box {
     background-color: {{ section.settings.card_bg_color }};
     border-radius: 12px;
     padding: 15px;
@@ -344,8 +349,8 @@
     box-shadow: 0 4px 15px rgba(0,0,0,0.02);
   }
 
-  .flex-card-image-box img,
-  .flex-card-image-box svg {
+  .latest-prod-card-image-box img,
+  .latest-prod-card-image-box svg {
     width: 100%;
     height: 100%;
     object-fit: cover;
@@ -353,7 +358,7 @@
     border-radius: 8px;
   }
 
-  .flex-product-title {
+  .latest-prod-product-title {
     font-size: {{ section.settings.title_size_desktop }}px;
     font-weight: 500;
     color: {{ section.settings.title_color }};
@@ -366,40 +371,40 @@
     overflow: hidden;
   }
 
-  .flex-product-price {
+  .latest-prod-product-price {
     font-size: {{ section.settings.price_size_desktop }}px;
     font-weight: 700;
     color: {{ section.settings.price_color }};
     margin: 0 0 12px 0;
   }
 
-  .flex-card-actions {
+  .latest-prod-card-actions {
     display: flex;
     flex-direction: column;
     gap: 8px;
     margin-top: auto;
   }
 
-  .flex-qty-buy-row {
+  .latest-prod-qty-buy-row {
     display: flex;
     align-items: center;
     gap: 6px;
     width: 100%;
   }
 
-  .flex-quantity-wrapper {
+  .latest-prod-quantity-wrapper {
     display: flex;
     align-items: center;
     justify-content: space-between;
     border: 1px solid #111111;
     border-radius: 30px;
     padding: 5px 8px;
-    flex: 0 0 85px;
+    flex: 0 0 100px;
     background: #ffffff;
     box-sizing: border-box;
   }
 
-  .flex-qty-btn {
+  .latest-prod-qty-btn {
     background: none;
     border: none;
     font-size: 15px;
@@ -408,17 +413,24 @@
     padding: 0 2px;
   }
 
-  .flex-qty-input {
+  .latest-prod-qty-input {
     border: none;
     background: none;
     text-align: center;
     font-size: 14px;
-    width: 22px;
+    width: 35px;
     font-weight: 600;
     outline: none;
+    -moz-appearance: textfield;
   }
 
-  .flex-buy-now-btn {
+  .latest-prod-qty-input::-webkit-outer-spin-button,
+  .latest-prod-qty-input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+  }
+
+  .latest-prod-buy-now-btn {
     flex: 1;
     background-color: {{ section.settings.buy_button_bg_color }};
     color: {{ section.settings.buy_button_text_color }};
@@ -435,11 +447,11 @@
     text-overflow: ellipsis;
   }
 
-  .flex-buy-now-btn:hover {
+  .latest-prod-buy-now-btn:hover {
     opacity: 0.9;
   }
 
-  .flex-add-to-cart-btn {
+  .latest-prod-add-to-cart-btn {
     background-color: {{ section.settings.button_bg_color }};
     color: {{ section.settings.button_text_color }};
     border: none;
@@ -456,11 +468,11 @@
     transition: opacity 0.2s ease;
   }
 
-  .flex-add-to-cart-btn:hover {
+  .latest-prod-add-to-cart-btn:hover {
     opacity: 0.9;
   }
 
-  .carousel-hover-arrow {
+  .latest-prod-carousel-arrow {
     position: absolute;
     top: 40%;
     transform: translateY(-50%);
@@ -481,55 +493,56 @@
     box-shadow: 0 4px 12px rgba(0,0,0,0.15);
   }
 
-  .carousel-hover-arrow.prev { left: -20px; }
-  .carousel-hover-arrow.next { right: -20px; }
+  .latest-prod-carousel-arrow.prev { left: -20px; }
+  .latest-prod-carousel-arrow.next { right: -20px; }
 
-  .flex-carousel-outer-wrapper:hover .carousel-hover-arrow {
+  .latest-prod-carousel-outer-wrapper:hover .latest-prod-carousel-arrow {
     opacity: 1;
     visibility: visible;
   }
 
   @media screen and (max-width: 768px) {
-    .flex-section-{{ section.id }} {
+    .latest-prod-section-{{ section.id }} {
       padding-top: {{ section.settings.padding_top_mobile }}px;
       padding-bottom: {{ section.settings.padding_bottom_mobile }}px;
     }
-    .flex-grid-heading {
+    .latest-prod-grid-heading {
       font-size: {{ section.settings.heading_size_mobile }}px;
     }
-    .flex-product-title {
+    .latest-prod-product-title {
       font-size: {{ section.settings.title_size_mobile }}px;
     }
-    .flex-product-price {
+    .latest-prod-product-price {
       font-size: {{ section.settings.price_size_mobile }}px;
     }
   }
 {% endstyle %}
 
-<div class="flex-section-{{ section.id }}">
-  <div class="flex-grid-container">
+<div class="latest-prod-section-{{ section.id }}">
+  <div class="latest-prod-grid-container">
     
     {%- if section.settings.heading != blank -%}
-      <h2 class="flex-grid-heading">{{ section.settings.heading }}</h2>
+      <h2 class="latest-prod-grid-heading">{{ section.settings.heading }}</h2>
     {%- endif -%}
 
-    <div class="flex-carousel-outer-wrapper">
+    <div class="latest-prod-carousel-outer-wrapper">
       {%- if section.settings.layout_type == 'carousel' -%}
-        <button type="button" class="carousel-hover-arrow prev" onclick="scrollCarousel('{{ section.id }}', -1)" aria-label="Previous">
+        <button type="button" class="latest-prod-carousel-arrow prev" onclick="scrollLatestCarousel('{{ section.id }}', -1)" aria-label="Previous">
           <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M15 18l-6-6 6-6"/></svg>
         </button>
-        <button type="button" class="carousel-hover-arrow next" onclick="scrollCarousel('{{ section.id }}', 1)" aria-label="Next">
+        <button type="button" class="latest-prod-carousel-arrow next" onclick="scrollLatestCarousel('{{ section.id }}', 1)" aria-label="Next">
           <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M9 18l6-6-6-6"/></svg>
         </button>
       {%- endif -%}
 
-      <div class="flex-products-wrapper layout-{{ section.settings.layout_type }}" id="ProductWrapper-{{ section.id }}">
+      <div class="latest-prod-products-wrapper layout-{{ section.settings.layout_type }}" id="LatestProductWrapper-{{ section.id }}">
+        {%- assign selected_collection = collections[section.settings.collection] -%}
         {%- assign limit = section.settings.products_limit -%}
 
-        {%- if collections.all.products.size > 0 -%}
-          {%- for product in collections.all.products limit: limit -%}
-            <div class="flex-product-card">
-              <a href="{{ product.url }}" class="flex-card-image-box">
+        {%- if selected_collection != blank and selected_collection.products.size > 0 -%}
+          {%- for product in selected_collection.products limit: limit -%}
+            <div class="latest-prod-product-card">
+              <a href="{{ product.url }}" class="latest-prod-card-image-box">
                 {%- if product.featured_image != blank -%}
                   <img src="{{ product.featured_image | image_url: width: 600 }}" alt="{{ product.title | escape }}" loading="lazy">
                 {%- else -%}
@@ -537,23 +550,23 @@
                 {%- endif -%}
               </a>
 
-              <a href="{{ product.url }}" class="flex-product-title">{{ product.title }}</a>
-              <div class="flex-product-price">{{ product.price | money }}</div>
+              <a href="{{ product.url }}" class="latest-prod-product-title">{{ product.title }}</a>
+              <div class="latest-prod-product-price">{{ product.price | money }}</div>
 
-              <div class="flex-card-actions">
-                <div class="flex-qty-buy-row">
-                  <div class="flex-quantity-wrapper">
-                    <button type="button" class="flex-qty-btn minus" onclick="adjustFlexQty(this, -1)">-</button>
-                    <input type="number" class="flex-qty-input" value="1" min="1" readonly>
-                    <button type="button" class="flex-qty-btn plus" onclick="adjustFlexQty(this, 1)">+</button>
+              <div class="latest-prod-card-actions">
+                <div class="latest-prod-qty-buy-row">
+                  <div class="latest-prod-quantity-wrapper">
+                    <button type="button" class="latest-prod-qty-btn minus" onclick="adjustLatestQty(this, -1)">-</button>
+                    <input type="number" class="latest-prod-qty-input" value="1" min="1" readonly>
+                    <button type="button" class="latest-prod-qty-btn plus" onclick="adjustLatestQty(this, 1)">+</button>
                   </div>
 
-                  <button type="button" class="flex-buy-now-btn" onclick="directCheckout('{{ product.selected_or_first_available_variant.id }}', this)">
+                  <button type="button" class="latest-prod-buy-now-btn" onclick="latestDirectCheckout('{{ product.selected_or_first_available_variant.id }}', this)">
                     Buy Now
                   </button>
                 </div>
 
-                <button type="button" class="flex-add-to-cart-btn" onclick="addFlexProductToCart('{{ product.selected_or_first_available_variant.id }}', this)">
+                <button type="button" class="latest-prod-add-to-cart-btn" onclick="addLatestProductToCart('{{ product.selected_or_first_available_variant.id }}', this)">
                   <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"></path><line x1="3" y1="6" x2="21" y2="6"></line><path d="M16 10a4 4 0 0 1-8 0"></path></svg>
                   Add to cart
                 </button>
@@ -565,26 +578,26 @@
           {%- assign demo_titles = "Elegance Silk Dress,Classic Blazer,Urban Jacket,Leather Shoulder Bag,Minimalist Summer Top,Vintage Designer Boots,Chic High-Waist Trousers,Modern Trench Coat" | split: "," -%}
           {%- for i in (1..limit) -%}
             {%- assign title_index = forloop.index0 | modulo: 8 -%}
-            <div class="flex-product-card">
-              <div class="flex-card-image-box">
+            <div class="latest-prod-product-card">
+              <div class="latest-prod-card-image-box">
                 {{ 'collection-1' | placeholder_svg_tag: 'placeholder-svg' }}
               </div>
-              <a href="#" class="flex-product-title">{{ demo_titles[title_index] }}</a>
-              <div class="flex-product-price">$250.00</div>
-              <div class="flex-card-actions">
-                <div class="flex-qty-buy-row">
-                  <div class="flex-quantity-wrapper">
-                    <button type="button" class="flex-qty-btn minus" onclick="adjustFlexQty(this, -1)">-</button>
-                    <input type="number" class="flex-qty-input" value="1" min="1" readonly>
-                    <button type="button" class="flex-qty-btn plus" onclick="adjustFlexQty(this, 1)">+</button>
+              <a href="#" class="latest-prod-product-title">{{ demo_titles[title_index] }}</a>
+              <div class="latest-prod-product-price">$250.00</div>
+              <div class="latest-prod-card-actions">
+                <div class="latest-prod-qty-buy-row">
+                  <div class="latest-prod-quantity-wrapper">
+                    <button type="button" class="latest-prod-qty-btn minus" onclick="adjustLatestQty(this, -1)">-</button>
+                    <input type="number" class="latest-prod-qty-input" value="1" min="1" readonly>
+                    <button type="button" class="latest-prod-qty-btn plus" onclick="adjustLatestQty(this, 1)">+</button>
                   </div>
 
-                  <button type="button" class="flex-buy-now-btn">
+                  <button type="button" class="latest-prod-buy-now-btn">
                     Buy Now
                   </button>
                 </div>
 
-                <button type="button" class="flex-add-to-cart-btn">
+                <button type="button" class="latest-prod-add-to-cart-btn">
                   <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"></path><line x1="3" y1="6" x2="21" y2="6"></line><path d="M16 10a4 4 0 0 1-8 0"></path></svg>
                   Add to cart
                 </button>
@@ -599,25 +612,25 @@
 </div>
 
 <script>
-  function adjustFlexQty(button, change) {
-    const wrapper = button.closest('.flex-card-actions');
-    const input = wrapper.querySelector('.flex-qty-input');
+  function adjustLatestQty(button, change) {
+    const wrapper = button.closest('.latest-prod-card-actions');
+    const input = wrapper.querySelector('.latest-prod-qty-input');
     let currentValue = parseInt(input.value) || 1;
     let newValue = currentValue + change;
     if (newValue < 1) newValue = 1;
     input.value = newValue;
   }
 
-  function scrollCarousel(sectionId, direction) {
-    const container = document.getElementById('ProductWrapper-' + sectionId);
+  function scrollLatestCarousel(sectionId, direction) {
+    const container = document.getElementById('LatestProductWrapper-' + sectionId);
     if (!container) return;
-    const cardWidth = container.querySelector('.flex-product-card').offsetWidth + 20;
+    const cardWidth = container.querySelector('.latest-prod-product-card').offsetWidth + 20;
     container.scrollBy({ left: direction * cardWidth * 2, behavior: 'smooth' });
   }
 
-  function addFlexProductToCart(variantId, button) {
-    const wrapper = button.closest('.flex-card-actions');
-    const quantity = parseInt(wrapper.querySelector('.flex-qty-input').value) || 1;
+  function addLatestProductToCart(variantId, button) {
+    const wrapper = button.closest('.latest-prod-card-actions');
+    const quantity = parseInt(wrapper.querySelector('.latest-prod-qty-input').value) || 1;
 
     let formData = {
       'items': [{
@@ -649,9 +662,9 @@
     });
   }
 
-  function directCheckout(variantId, button) {
-    const wrapper = button.closest('.flex-card-actions');
-    const quantity = parseInt(wrapper.querySelector('.flex-qty-input').value) || 1;
+  function latestDirectCheckout(variantId, button) {
+    const wrapper = button.closest('.latest-prod-card-actions');
+    const quantity = parseInt(wrapper.querySelector('.latest-prod-qty-input').value) || 1;
 
     let formData = {
       'items': [{
