@@ -1,0 +1,252 @@
+{% comment %}
+  Google Map Section
+  File: sections/map_section.liquid
+{% endcomment %}
+
+{%- liquid
+  assign sid = section.id
+-%}
+
+<style>
+  #fwm-{{ sid }} {
+    width: 100% !important;
+    background: {{ section.settings.bg_color }};
+    padding-top: {{ section.settings.padding_top }}px;
+    padding-bottom: {{ section.settings.padding_bottom }}px;
+    box-sizing: border-box;
+  }
+
+  {% if section.settings.container_layout == 'fullwidth' %}
+    #fwm-{{ sid }} {
+      width: 100vw !important;
+      position: relative !important;
+      left: 50% !important;
+      right: 50% !important;
+      margin-left: -50vw !important;
+      margin-right: -50vw !important;
+    }
+    
+    body {
+      overflow-x: hidden !important;
+    }
+
+    #fwm-{{ sid }} .fwm-container {
+      width: 100vw !important;
+      max-width: 100vw !important;
+      padding: 0 !important;
+      margin: 0 !important;
+    }
+  {% else %}
+    #fwm-{{ sid }} .fwm-container {
+      max-width: {{ section.settings.container_width }}px;
+      margin: 0 auto !important;
+      padding: 0 20px;
+    }
+  {% endif %}
+
+  #fwm-{{ sid }} .fwm-container {
+    line-height: 0;
+    height: {{ section.settings.map_height_desktop }}px;
+    box-sizing: border-box;
+  }
+
+  #fwm-{{ sid }} .fwm-container iframe {
+    width: 100% !important;
+    height: 100% !important;
+    border: 0 !important;
+    display: block;
+    border-radius: {{ section.settings.border_radius }}px;
+  }
+
+  @media (max-width: 767px) {
+    #fwm-{{ sid }} {
+      padding-top: {{ section.settings.padding_top_mobile }}px;
+      padding-bottom: {{ section.settings.padding_bottom_mobile }}px;
+    }
+
+    #fwm-{{ sid }} .fwm-container {
+      height: {{ section.settings.map_height_mobile }}px;
+      {% if section.settings.container_layout == 'boxed' %}
+        padding: 0 16px;
+      {% endif %}
+    }
+
+    #fwm-{{ sid }} .fwm-container iframe {
+      border-radius: {{ section.settings.border_radius_mobile }}px;
+    }
+  }
+</style>
+
+<section id="fwm-{{ sid }}" class="fwm-section">
+  {% if section.settings.map_iframe != blank %}
+    <div class="fwm-container">
+      {{ section.settings.map_iframe }}
+    </div>
+  {% else %}
+    <div class="fwm-placeholder" style="text-align: center; padding: 40px 20px; line-height: 1.5; color: #666; background: #f4f4f4; border-radius: {{ section.settings.border_radius }}px;">
+      <p style="margin: 0;">Please paste your Google Map Embed Iframe code in the section settings.</p>
+    </div>
+  {% endif %}
+</section>
+
+{% schema %}
+{
+  "name": "Google Map",
+  "tag": "section",
+  "class": "section-google-map",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Layout Settings"
+    },
+    {
+      "type": "select",
+      "id": "container_layout",
+      "label": "Container Layout",
+      "options": [
+        {
+          "value": "boxed",
+          "label": "Box Width"
+        },
+        {
+          "value": "fullwidth",
+          "label": "Full Width"
+        }
+      ],
+      "default": "fullwidth"
+    },
+    {
+      "type": "range",
+      "id": "container_width",
+      "min": 800,
+      "max": 1600,
+      "step": 20,
+      "unit": "px",
+      "label": "Box Container Max Width",
+      "default": 1200,
+      "info": "Eti shudhu Box Width layout select thakle kaj korbe."
+    },
+    {
+      "type": "header",
+      "content": "Border Radius Controls"
+    },
+    {
+      "type": "range",
+      "id": "border_radius",
+      "min": 0,
+      "max": 50,
+      "step": 1,
+      "unit": "px",
+      "label": "Border Radius (Desktop)",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "border_radius_mobile",
+      "min": 0,
+      "max": 50,
+      "step": 1,
+      "unit": "px",
+      "label": "Border Radius (Mobile)",
+      "default": 0
+    },
+    {
+      "type": "header",
+      "content": "Google Map Content"
+    },
+    {
+      "type": "textarea",
+      "id": "map_iframe",
+      "label": "Google Map Embed Code (Iframe)",
+      "info": "Paste full <iframe> code from Google Maps share options."
+    },
+    {
+      "type": "header",
+      "content": "Map Height Controls"
+    },
+    {
+      "type": "range",
+      "id": "map_height_desktop",
+      "min": 200,
+      "max": 800,
+      "step": 10,
+      "unit": "px",
+      "label": "Map Height (Desktop)",
+      "default": 450
+    },
+    {
+      "type": "range",
+      "id": "map_height_mobile",
+      "min": 150,
+      "max": 600,
+      "step": 10,
+      "unit": "px",
+      "label": "Map Height (Mobile)",
+      "default": 300
+    },
+    {
+      "type": "header",
+      "content": "Padding: Desktop"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "min": 0,
+      "max": 120,
+      "step": 5,
+      "unit": "px",
+      "label": "Padding Top (Desktop)",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "min": 0,
+      "max": 120,
+      "step": 5,
+      "unit": "px",
+      "label": "Padding Bottom (Desktop)",
+      "default": 0
+    },
+    {
+      "type": "header",
+      "content": "Padding: Mobile"
+    },
+    {
+      "type": "range",
+      "id": "padding_top_mobile",
+      "min": 0,
+      "max": 120,
+      "step": 5,
+      "unit": "px",
+      "label": "Padding Top (Mobile)",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom_mobile",
+      "min": 0,
+      "max": 120,
+      "step": 5,
+      "unit": "px",
+      "label": "Padding Bottom (Mobile)",
+      "default": 0
+    },
+    {
+      "type": "header",
+      "content": "Background Color"
+    },
+    {
+      "type": "color",
+      "id": "bg_color",
+      "label": "Background Color",
+      "default": "#ffffff"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Google Map"
+    }
+  ]
+}
+{% endschema %}
