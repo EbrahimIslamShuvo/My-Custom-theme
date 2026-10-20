@@ -182,25 +182,33 @@
 {% endschema %}
 
 {% style %}
+  /* Fix horizontal scroll globally for this section */
+  html, body {
+    max-width: 100% !important;
+    overflow-x: hidden !important;
+  }
+
   .section-fashion-hero-slider {
     width: 100% !important;
     max-width: 100% !important;
     margin: 0 !important;
     padding: 0 !important;
     overflow: hidden !important;
-    background: transparent !important;
   }
 
   .hero-slider-{{ section.id }} {
-    width: 100vw;
+    width: 100% !important;
     position: relative;
-    left: 50%;
-    right: 50%;
-    margin-left: -50vw;
-    margin-right: -50vw;
     box-sizing: border-box;
-    overflow: hidden;
-    background: transparent !important;
+    overflow: hidden !important;
+  }
+
+  /* Break out of standard theme limits smoothly without using 100vw */
+  .hero-slider-{{ section.id }} {
+    margin-left: calc(-50vw + 50%);
+    margin-right: calc(-50vw + 50%);
+    width: auto !important;
+    max-width: none !important;
   }
 
   .hero-slider-container {
@@ -244,7 +252,7 @@
     z-index: 2;
   }
 
-  /* Pure Background Image Layer with Default Placeholder */
+  /* Pure Background Image Layer */
   .hero-slide-bg-wrapper {
     position: absolute;
     top: 0;
@@ -283,7 +291,7 @@
     background: #e5ded3;
   }
 
-  /* Left Text Content Styling */
+  /* Content Styling */
   .hero-content-left {
     display: flex;
     flex-direction: column;
@@ -336,7 +344,7 @@
     transform: translateY(-2px);
   }
 
-  /* Fixed Navigation Arrows (Bottom Right) */
+  /* Navigation Arrows */
   .hero-fixed-nav {
     position: absolute;
     bottom: 25px;
@@ -396,7 +404,7 @@
 {% endstyle %}
 
 <div class="hero-slider-{{ section.id }}">
-  <!-- Slide Background Images Wrapper -->
+  <!-- Background Images -->
   <div class="hero-slide-bg-wrapper" id="HeroBgs-{{ section.id }}">
     {%- if section.blocks.size > 0 -%}
       {%- for block in section.blocks -%}
@@ -443,7 +451,6 @@
           </div>
         {%- endfor -%}
       {%- else -%}
-        <!-- Fallback Demo Slide -->
         <div class="hero-single-slide is-active" data-index="0">
           <div class="hero-content-left">
             <span class="hero-subtitle">NEW FASHION SERIES</span>
@@ -455,7 +462,7 @@
       {%- endif -%}
     </div>
 
-    <!-- Fixed Bottom Right Navigation Arrows -->
+    <!-- Navigation Arrows -->
     <div class="hero-fixed-nav">
       <button type="button" class="hero-nav-btn prev" id="HeroPrev-{{ section.id }}" aria-label="Previous Slide">
         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
