@@ -1,0 +1,287 @@
+{%- comment -%}
+  Fashion Split Section with Official Shopify SVG Placeholder
+{%- endcomment -%}
+<div
+  class="split-craft split-craft--{{ section.settings.image_side }}{% if section.settings.mobile_image_position == 'bottom' %} split-craft--stack-below{% endif %}"
+  style="
+    --panel-bg: {{ section.settings.panel_bg_color }};
+    --img-width: {{ section.settings.image_width }}%;
+    --img-height: {{ section.settings.image_height_desktop }}px;
+    --img-height-mobile: {{ section.settings.mobile_image_height }}px;
+    --sc-accent: {{ section.settings.accent_color }};
+    --sc-text: {{ section.settings.text_color }};
+    --sc-eyebrow-size: {{ section.settings.eyebrow_size_mobile }}px;
+    --sc-eyebrow-size-lg: {{ section.settings.eyebrow_size_desktop }}px;
+    --sc-heading-size: {{ section.settings.heading_size_mobile }}px;
+    --sc-heading-size-lg: {{ section.settings.heading_size_desktop }}px;
+    --sc-body-size: {{ section.settings.body_size_mobile }}px;
+    --sc-body-size-lg: {{ section.settings.body_size_desktop }}px;
+    --sc-pt-desktop: {{ section.settings.padding_top_desktop }}px;
+    --sc-pb-desktop: {{ section.settings.padding_bottom_desktop }}px;
+    --sc-pt-mobile: {{ section.settings.padding_top_mobile }}px;
+    --sc-pb-mobile: {{ section.settings.padding_bottom_mobile }}px;
+  "
+>
+
+  <div class="split-craft__image">
+    {% if section.settings.image != blank %}
+      <img
+        src="{{ section.settings.image | image_url: width: 1600 }}"
+        srcset="
+          {{ section.settings.image | image_url: width: 500 }} 500w,
+          {{ section.settings.image | image_url: width: 900 }} 900w,
+          {{ section.settings.image | image_url: width: 1600 }} 1600w
+        "
+        sizes="(max-width: 749px) 100vw, {{ section.settings.image_width }}vw"
+        alt="{{ section.settings.image.alt | default: section.settings.heading | escape }}"
+        width="{{ section.settings.image.width }}"
+        height="{{ section.settings.image.height }}"
+        loading="lazy"
+      >
+    {% else %}
+      <div class="split-craft__placeholder-wrap">
+        {{ 'collection-1' | placeholder_svg_tag: 'placeholder-svg split-craft__placeholder' }}
+      </div>
+    {% endif %}
+  </div>
+
+  <div class="split-craft__panel">
+    <div class="split-craft__inner">
+      {% if section.settings.eyebrow != blank %}
+        <p class="split-craft__eyebrow">{{ section.settings.eyebrow | escape }}</p>
+      {% endif %}
+
+      {% if section.settings.heading != blank %}
+        <h2 class="split-craft__heading">{{ section.settings.heading }}</h2>
+      {% endif %}
+
+      <span class="split-craft__divider"></span>
+
+      {% if section.settings.body_lines != blank %}
+        <div class="split-craft__body">
+          {% assign lines = section.settings.body_lines | newline_to_br | split: '<br />' %}
+          {% for line in lines %}
+            {% if line != blank %}<p>{{ line | strip }}</p>{% endif %}
+          {% endfor %}
+        </div>
+      {% endif %}
+
+      {% if section.settings.link_label != blank %}
+        <a href="{{ section.settings.link_url | default: '#' }}" class="split-craft__link lux-link">
+          <span class="lux-link__label">{{ section.settings.link_label | escape }}</span>
+          <span class="split-craft__arrow lux-link__arrow" aria-hidden="true">&gt;</span>
+        </a>
+      {% endif %}
+    </div>
+  </div>
+</div>
+
+{% stylesheet %}
+  .split-craft {
+    display: flex;
+    width: 100%;
+    padding-top: var(--sc-pt-desktop, 0px);
+    padding-bottom: var(--sc-pb-desktop, 0px);
+    box-sizing: border-box;
+  }
+
+  .split-craft--right { flex-direction: row; }
+  .split-craft--left { flex-direction: row-reverse; }
+
+  .split-craft__image {
+    width: var(--img-width);
+    height: var(--img-height);
+    overflow: hidden;
+    position: relative;
+    background: #e5ded3;
+  }
+
+  .split-craft__image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    transition: transform var(--lux-duration, 500ms) var(--lux-ease, ease);
+  }
+
+  .split-craft__placeholder-wrap {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #e5ded3;
+  }
+
+  .split-craft__placeholder {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    fill: #a39b8e;
+  }
+
+  .split-craft__image:hover img {
+    transform: scale(1.03);
+  }
+
+  .split-craft__panel {
+    width: calc(100% - var(--img-width));
+    background: var(--panel-bg);
+    display: flex;
+    align-items: center;
+  }
+
+  .split-craft__inner {
+    padding-inline: 30px;
+  }
+
+  .split-craft__eyebrow {
+    font-family: var(--font-subheading--family);
+    font-size: var(--sc-eyebrow-size-lg, 13px);
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--sc-accent, #967259);
+    font-weight: 500;
+    margin: 0 0 14px 0;
+  }
+
+  .split-craft__heading {
+    font-family: var(--font-heading--family);
+    font-size: min(var(--sc-heading-size-lg, 40px), max(1.5rem, 4vw));
+    color: var(--sc-text, #1a1a1a);
+    line-height: var(--line-height--heading-normal, 1.25);
+    text-wrap: balance;
+    margin: 0 0 20px 0;
+  }
+
+  .split-craft__divider {
+    display: block;
+    width: 48px;
+    height: 2px;
+    background: var(--sc-accent, #967259);
+    margin-bottom: 20px;
+  }
+
+  .split-craft__body p {
+    font-size: var(--sc-body-size-lg, 15px);
+    color: var(--sc-text, #1a1a1a);
+    opacity: 0.85;
+    line-height: var(--line-height--body-loose, 1.6);
+    margin: 0 0 6px 0;
+  }
+
+  .split-craft__link {
+    --lux-link-rule-color: var(--sc-accent, #967259);
+
+    margin-top: 22px;
+    color: var(--sc-text, #1a1a1a);
+    transition: color var(--lux-duration-fast, 280ms) var(--lux-ease, ease);
+  }
+
+  .split-craft__link:hover,
+  .split-craft__link:focus-visible {
+    color: var(--sc-accent, #967259);
+  }
+
+  .split-craft__arrow {
+    color: var(--sc-accent, #967259);
+  }
+
+  @media screen and (max-width: 749px) {
+    .split-craft {
+      flex-direction: column;
+      padding-top: var(--sc-pt-mobile, 0px);
+      padding-bottom: var(--sc-pb-mobile, 0px);
+    }
+
+    .split-craft--stack-below {
+      flex-direction: column-reverse;
+    }
+
+    .split-craft__image {
+      width: 100%;
+      height: var(--img-height-mobile, 300px);
+    }
+
+    .split-craft__panel {
+      width: 100%;
+      padding-left: 0px;
+    }
+
+    .split-craft__inner {
+      padding: 32px 4%;
+      max-width: 100%;
+    }
+
+    .split-craft__eyebrow { font-size: var(--sc-eyebrow-size, 11px); }
+    .split-craft__heading { font-size: var(--sc-heading-size, 30px); }
+    .split-craft__body p { font-size: var(--sc-body-size, 14px); }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .split-craft__image:hover img {
+      transform: none;
+    }
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "Fashion Split",
+  "tag": "section",
+  "class": "section-split-fashion",
+  "settings": [
+    { "type": "header", "content": "Image" },
+    { "type": "image_picker", "id": "image", "label": "Image" },
+    {
+      "type": "select",
+      "id": "image_side",
+      "label": "Image side (desktop)",
+      "options": [
+        { "value": "left", "label": "Left" },
+        { "value": "right", "label": "Right" }
+      ],
+      "default": "left"
+    },
+    { "type": "range", "id": "image_width", "label": "Image width", "min": 30, "max": 75, "step": 1, "unit": "%", "default": 65 },
+    { "type": "range", "id": "image_height_desktop", "label": "Image height (desktop)", "min": 250, "max": 900, "step": 10, "unit": "px", "default": 400 },
+    { "type": "select", "id": "mobile_image_position", "label": "Image position (mobile)", "options": [
+        { "value": "top", "label": "Top" },
+        { "value": "bottom", "label": "Bottom" }
+      ], "default": "top" },
+    { "type": "range", "id": "mobile_image_height", "label": "Image height (mobile)", "min": 200, "max": 600, "step": 10, "unit": "px", "default": 300 },
+
+    { "type": "header", "content": "Text content" },
+    { "type": "text", "id": "eyebrow", "label": "Eyebrow label", "default": "New Collection" },
+    { "type": "richtext", "id": "heading", "label": "Heading", "default": "<p>Elegance in Every Stitch</p>" },
+    { "type": "textarea", "id": "body_lines", "label": "Body lines (one per line)", "default": "Curated styles for the modern wardrobe.\nLuxurious fabrics designed for ultimate comfort.\nVersatile pieces that transition effortlessly from day to night.\nSustainable fashion tailored to perfection." },
+    { "type": "text", "id": "link_label", "label": "Link label", "default": "Shop The Look" },
+    { "type": "url", "id": "link_url", "label": "Link URL" },
+
+    { "type": "header", "content": "Colors" },
+    { "type": "color", "id": "panel_bg_color", "label": "Panel background", "default": "#f4f1ea" },
+    { "type": "color", "id": "text_color", "label": "Text color", "default": "#1a1a1a" },
+    { "type": "color", "id": "accent_color", "label": "Accent color (eyebrow/line/arrow)", "default": "#967259" },
+
+    { "type": "header", "content": "Padding - Desktop" },
+    { "type": "range", "id": "padding_top_desktop", "label": "Padding top (desktop)", "min": 0, "max": 160, "step": 4, "unit": "px", "default": 0 },
+    { "type": "range", "id": "padding_bottom_desktop", "label": "Padding bottom (desktop)", "min": 0, "max": 160, "step": 4, "unit": "px", "default": 0 },
+
+    { "type": "header", "content": "Padding - Mobile" },
+    { "type": "range", "id": "padding_top_mobile", "label": "Padding top (mobile)", "min": 0, "max": 120, "step": 4, "unit": "px", "default": 0 },
+    { "type": "range", "id": "padding_bottom_mobile", "label": "Padding bottom (mobile)", "min": 0, "max": 120, "step": 4, "unit": "px", "default": 0 },
+
+    { "type": "header", "content": "Sizing - Desktop" },
+    { "type": "range", "id": "eyebrow_size_desktop", "label": "Eyebrow size", "min": 10, "max": 22, "step": 1, "unit": "px", "default": 13 },
+    { "type": "range", "id": "heading_size_desktop", "label": "Heading size", "min": 22, "max": 60, "step": 1, "unit": "px", "default": 38 },
+    { "type": "range", "id": "body_size_desktop", "label": "Body text size", "min": 12, "max": 22, "step": 1, "unit": "px", "default": 15 },
+
+    { "type": "header", "content": "Sizing - Mobile" },
+    { "type": "range", "id": "eyebrow_size_mobile", "label": "Eyebrow size", "min": 8, "max": 18, "step": 1, "unit": "px", "default": 11 },
+    { "type": "range", "id": "heading_size_mobile", "label": "Heading size", "min": 18, "max": 40, "step": 1, "unit": "px", "default": 26 },
+    { "type": "range", "id": "body_size_mobile", "label": "Body text size", "min": 10, "max": 18, "step": 1, "unit": "px", "default": 14 }
+  ],
+  "presets": [{ "name": "Fashion Split" }]
+}
+{% endschema %}

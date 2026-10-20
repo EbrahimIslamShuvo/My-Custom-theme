@@ -1,0 +1,1200 @@
+{% schema %}
+{
+  "name": "Advanced Collection Grid",
+  "tag": "section",
+  "class": "section-advanced-collection",
+  "settings": [
+    {
+      "type": "range",
+      "id": "max_width",
+      "min": 1000,
+      "max": 1800,
+      "step": 20,
+      "unit": "px",
+      "label": "Container Max Width",
+      "default": 1400
+    },
+    {
+      "type": "range",
+      "id": "products_per_page",
+      "min": 4,
+      "max": 36,
+      "step": 2,
+      "label": "Products Per Page",
+      "default": 12
+    },
+    {
+      "type": "range",
+      "id": "columns_desktop",
+      "min": 2,
+      "max": 5,
+      "step": 1,
+      "label": "Default Columns Per Row",
+      "default": 4
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_filtering",
+      "label": "Enable Filtering",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_sorting",
+      "label": "Enable Sorting",
+      "default": true
+    },
+    {
+      "type": "header",
+      "content": "Color Settings"
+    },
+    {
+      "type": "color",
+      "id": "bg_color",
+      "label": "Section Background",
+      "default": "#FDFBF7"
+    },
+    {
+      "type": "color",
+      "id": "card_bg",
+      "label": "Card Image Background",
+      "default": "#FAF5EF"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text Color",
+      "default": "#111111"
+    },
+    {
+      "type": "color",
+      "id": "price_color",
+      "label": "Price Color",
+      "default": "#000000"
+    },
+    {
+      "type": "color",
+      "id": "buy_button_bg",
+      "label": "Buy Now Button BG",
+      "default": "#111111"
+    },
+    {
+      "type": "color",
+      "id": "buy_button_text",
+      "label": "Buy Now Button Text",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "atc_button_bg",
+      "label": "Add to Cart Button BG",
+      "default": "#111111"
+    },
+    {
+      "type": "color",
+      "id": "atc_button_text",
+      "label": "Add to Cart Button Text",
+      "default": "#ffffff"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Advanced Collection Grid"
+    }
+  ]
+}
+{% endschema %}
+
+{% style %}
+  .adv-collection-section {
+    background-color: {{ section.settings.bg_color }};
+    padding: 40px 20px 80px 20px;
+    width: 100vw;
+    position: relative;
+    left: 50%;
+    right: 50%;
+    margin-left: -50vw;
+    margin-right: -50vw;
+    box-sizing: border-box;
+    overflow-x: hidden;
+    font-family: inherit;
+  }
+
+  .adv-container {
+    max-width: {{ section.settings.max_width }}px;
+    margin: 0 auto;
+    width: 100%;
+    box-sizing: border-box;
+  }
+
+  /* Header */
+  .adv-collection-header {
+    margin-bottom: 30px;
+  }
+
+  .adv-breadcrumb {
+    font-size: 13px;
+    color: #777;
+    margin-bottom: 10px;
+  }
+  .adv-breadcrumb a {
+    color: #777;
+    text-decoration: none;
+  }
+
+  .adv-collection-title {
+    font-size: 38px;
+    font-weight: 400;
+    color: {{ section.settings.text_color }};
+    margin: 0 0 12px 0;
+    font-family: Georgia, serif;
+  }
+
+  .adv-collection-desc {
+    font-size: 14px;
+    line-height: 1.6;
+    color: #555;
+    max-width: 900px;
+  }
+
+  /* Toolbar */
+  .adv-toolbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-top: 1px solid #eae5df;
+    border-bottom: 1px solid #eae5df;
+    padding: 14px 0;
+    margin-bottom: 35px;
+    position: relative;
+    gap: 15px;
+    flex-wrap: wrap;
+  }
+
+  .adv-toolbar-left {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+  }
+
+  .adv-filter-toggle-btn {
+    background: none;
+    border: none;
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: {{ section.settings.text_color }};
+  }
+
+  /* Custom Sorting Dropdown */
+  .adv-sort-wrapper {
+    position: relative;
+    display: inline-block;
+  }
+
+  .adv-sort-toggle {
+    background: none;
+    border: none;
+    font-size: 14px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    color: {{ section.settings.text_color }};
+    font-weight: 500;
+  }
+
+  .adv-sort-dropdown-menu {
+    position: absolute;
+    left: 0;
+    top: 100%;
+    background: #FFFDF9;
+    border: 1px solid #e2dad0;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+    width: 240px;
+    z-index: 99;
+    display: none;
+    padding: 8px 0;
+    border-radius: 4px;
+  }
+
+  .adv-sort-dropdown-menu.is-open {
+    display: block;
+  }
+
+  .adv-sort-item {
+    padding: 11px 18px;
+    font-size: 14px;
+    color: #333;
+    cursor: pointer;
+    text-decoration: none;
+    display: block;
+    transition: background 0.2s;
+  }
+
+  .adv-sort-item:hover {
+    background: #f3eee6;
+  }
+
+  /* Mobile Sort Bottom Sheet */
+  .adv-sort-backdrop {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,0.4);
+    z-index: 1999;
+    display: none;
+  }
+  .adv-sort-backdrop.active {
+    display: block;
+  }
+
+  .adv-sort-bottom-sheet {
+    position: fixed;
+    bottom: -100%;
+    left: 0;
+    width: 100%;
+    background: #FFFDF9;
+    border-top-left-radius: 16px;
+    border-top-right-radius: 16px;
+    box-shadow: 0 -10px 30px rgba(0,0,0,0.15);
+    z-index: 2000;
+    transition: bottom 0.35s cubic-bezier(0.1, 0.9, 0.2, 1);
+    padding: 20px 20px 40px 20px;
+    box-sizing: border-box;
+    max-height: 85vh;
+    overflow-y: auto;
+  }
+
+  .adv-sort-bottom-sheet.active {
+    bottom: 0;
+  }
+
+  .sheet-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid #eae5df;
+    padding-bottom: 12px;
+    margin-bottom: 12px;
+    font-size: 18px;
+    font-weight: 600;
+    font-family: Georgia, serif;
+  }
+
+  /* Dynamic Grid Switcher Controls */
+  .adv-grid-switcher {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .grid-switch-btn {
+    background: transparent;
+    border: none;
+    padding: 6px 8px;
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: -1px;
+    color: #888;
+    cursor: pointer;
+    border-radius: 4px;
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 32px;
+    height: 32px;
+  }
+
+  .grid-switch-btn:hover {
+    color: {{ section.settings.text_color }};
+    background: #f0e9e0;
+  }
+
+  .grid-switch-btn.active {
+    background-color: #3A857A;
+    color: #ffffff !important;
+  }
+
+  /* Main Layout */
+  .adv-main-layout {
+    display: grid;
+    grid-template-columns: 260px 1fr;
+    gap: 40px;
+    align-items: start;
+  }
+
+  @media screen and (max-width: 1024px) {
+    .adv-main-layout {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  /* Filters Sidebar & Accordion */
+  .adv-filters-sidebar {
+    background: #FFFDF9;
+    padding: 20px;
+    border-radius: 8px;
+    border: 1px solid #eee;
+  }
+
+  @media screen and (max-width: 1024px) {
+    .adv-filters-sidebar {
+      position: fixed;
+      top: 0;
+      left: -320px;
+      width: 300px;
+      height: 100%;
+      z-index: 1000;
+      box-shadow: 5px 0 25px rgba(0,0,0,0.15);
+      transition: left 0.3s ease;
+      overflow-y: auto;
+      border-radius: 0;
+    }
+    .adv-filters-sidebar.mobile-open {
+      left: 0;
+    }
+  }
+
+  .adv-filter-header-mobile {
+    display: none;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+    font-weight: 600;
+    font-size: 18px;
+  }
+  @media screen and (max-width: 1024px) {
+    .adv-filter-header-mobile {
+      display: flex;
+    }
+  }
+
+  .filter-group {
+    border-bottom: 1px solid #eae5df;
+    padding: 15px 0;
+  }
+  .filter-group-title {
+    font-size: 15px;
+    font-weight: 600;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    cursor: pointer;
+    color: {{ section.settings.text_color }};
+    user-select: none;
+  }
+
+  .filter-group-title .thin-arrow {
+    width: 12px;
+    height: 12px;
+    stroke: #111;
+    stroke-width: 1.5;
+    fill: none;
+    transition: transform 0.3s ease;
+  }
+
+  .filter-group.collapsed .filter-group-title .thin-arrow {
+    transform: rotate(180deg);
+  }
+
+  .filter-group-content {
+    max-height: 300px;
+    overflow: hidden;
+    transition: max-height 0.35s ease, opacity 0.3s ease, margin-top 0.3s ease;
+    opacity: 1;
+    margin-top: 14px;
+  }
+
+  .filter-group.collapsed .filter-group-content {
+    max-height: 0;
+    opacity: 0;
+    margin-top: 0;
+  }
+
+  .filter-options-box {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .filter-option-label {
+    font-size: 13px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    cursor: pointer;
+    color: #444;
+  }
+
+  /* Slim Dual Range Slider Styling with Active Black Bar */
+  .price-slider-box {
+    margin-top: 5px;
+  }
+
+  .dual-range-container {
+    position: relative;
+    width: 100%;
+    height: 30px;
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px;
+  }
+
+  .slider-track {
+    position: absolute;
+    width: 100%;
+    height: 2px;
+    background: #dcd6cd;
+    border-radius: 2px;
+  }
+
+  .slider-range-fill {
+    position: absolute;
+    height: 2px;
+    background: #111111;
+    border-radius: 2px;
+    left: 0%;
+    width: 100%;
+  }
+
+  .dual-range-container input[type="range"] {
+    position: absolute;
+    width: 100%;
+    height: 2px;
+    background: none;
+    pointer-events: none;
+    -webkit-appearance: none;
+    appearance: none;
+    margin: 0;
+    z-index: 3;
+  }
+
+  .dual-range-container input[type="range"]::-webkit-slider-thumb {
+    pointer-events: auto;
+    -webkit-appearance: none;
+    appearance: none;
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    background: #111111;
+    cursor: pointer;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+    transition: transform 0.1s ease;
+  }
+
+  .dual-range-container input[type="range"]::-webkit-slider-thumb:hover {
+    transform: scale(1.15);
+  }
+
+  .dual-range-container input[type="range"]::-moz-range-thumb {
+    pointer-events: auto;
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    background: #111111;
+    cursor: pointer;
+    border: none;
+  }
+
+  .price-inputs {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .price-inputs input {
+    width: 100%;
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 13px;
+    text-align: center;
+    background: #fff;
+  }
+
+  /* Dynamic Grid System */
+  .adv-products-grid {
+    display: grid;
+    gap: 24px;
+    transition: grid-template-columns 0.3s ease;
+  }
+
+  .adv-products-grid.cols-1 { grid-template-columns: 1fr; }
+  .adv-products-grid.cols-2 { grid-template-columns: repeat(2, 1fr); }
+  .adv-products-grid.cols-3 { grid-template-columns: repeat(3, 1fr); }
+  .adv-products-grid.cols-4 { grid-template-columns: repeat(4, 1fr); }
+  .adv-products-grid.cols-5 { grid-template-columns: repeat(5, 1fr); }
+
+  @media screen and (max-width: 900px) {
+    .adv-products-grid {
+      grid-template-columns: repeat(2, 1fr) !important;
+      gap: 16px;
+    }
+  }
+  @media screen and (max-width: 500px) {
+    .adv-products-grid {
+      grid-template-columns: repeat(1, 1fr) !important;
+    }
+  }
+
+  /* TRUE LIST VIEW LAYOUT (Only active when cols-1 is applied via list icon) */
+  .adv-products-grid.cols-1 .flex-product-card {
+    display: grid !important;
+    grid-template-columns: 180px 1fr !important;
+    gap: 24px !important;
+    align-items: center !important;
+    background: #FFFDF9 !important;
+    border: 1px solid #eae5df !important;
+    padding: 20px !important;
+    border-radius: 12px !important;
+    width: 100% !important;
+    box-sizing: border-box !important;
+    margin-bottom: 16px !important;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.02) !important;
+  }
+
+  .adv-products-grid.cols-1 .flex-card-image-box { 
+    margin-bottom: 0 !important; 
+    width: 180px !important;
+    height: 180px !important;
+    min-height: 180px !important;
+    aspect-ratio: 1 / 1 !important;
+    border-radius: 8px !important;
+  }
+
+  .adv-products-grid.cols-1 .flex-card-details { 
+    display: flex !important; 
+    flex-direction: column !important; 
+    justify-content: center !important; 
+    width: 100% !important;
+  }
+
+  .adv-products-grid.cols-1 .flex-product-title {
+    font-size: 17px !important;
+    font-weight: 500 !important;
+    color: {{ section.settings.text_color }} !important;
+    margin-bottom: 6px !important;
+  }
+
+  .adv-products-grid.cols-1 .flex-product-price {
+    font-size: 16px !important;
+    color: {{ section.settings.price_color }} !important;
+    font-weight: 600 !important;
+    margin-bottom: 8px !important;
+  }
+
+  .adv-products-grid.cols-1 .flex-product-desc {
+    display: block !important;
+    font-size: 13px !important;
+    color: #666 !important;
+    line-height: 1.4 !important;
+    margin-bottom: 14px !important;
+  }
+
+  .adv-products-grid.cols-1 .flex-card-actions {
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 8px !important;
+    width: 100% !important;
+    max-width: 450px !important;
+    margin-top: 0 !important;
+  }
+
+  .adv-products-grid.cols-1 .flex-qty-buy-row {
+    display: flex !important;
+    align-items: center !important;
+    gap: 10px !important;
+  }
+
+  .adv-products-grid.cols-1 .flex-quantity-wrapper {
+    flex: 0 0 100px !important;
+    border-color: #111 !important;
+  }
+
+  .adv-products-grid.cols-1 .flex-buy-now-btn {
+    flex: 1 !important;
+    padding: 10px 16px !important;
+  }
+
+  .adv-products-grid.cols-1 .flex-add-to-cart-btn {
+    width: 100% !important;
+    background-color: {{ section.settings.atc_button_bg }} !important;
+    color: {{ section.settings.atc_button_text }} !important;
+    border-radius: 30px !important;
+    padding: 10px 16px !important;
+    font-size: 13px !important;
+    font-weight: 600 !important;
+    letter-spacing: 0.5px !important;
+  }
+
+  @media screen and (max-width: 650px) {
+    .adv-products-grid.cols-1 .flex-product-card { grid-template-columns: 1fr !important; }
+    .adv-products-grid.cols-1 .flex-card-image-box { width: 100% !important; height: auto !important; aspect-ratio: 1/1 !important; }
+  }
+
+  /* Standard Grid Card Styling */
+  .flex-product-card {
+    display: flex;
+    flex-direction: column;
+    background: transparent;
+  }
+
+  .flex-card-image-box {
+    background-color: {{ section.settings.card_bg }};
+    border-radius: 12px;
+    padding: 20px;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    aspect-ratio: 1 / 1;
+    overflow: hidden;
+    margin-bottom: 14px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.02);
+    text-decoration: none;
+  }
+
+  .flex-card-image-box img,
+  .flex-card-image-box svg {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+
+  .flex-product-title {
+    font-size: 15px;
+    font-weight: 500;
+    color: {{ section.settings.text_color }};
+    text-decoration: none;
+    line-height: 1.4;
+    margin: 0 0 8px 0;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+  .flex-product-title:hover { text-decoration: underline; }
+
+  .flex-product-price {
+    font-size: 16px;
+    font-weight: 700;
+    color: {{ section.settings.price_color }};
+    margin: 0 0 14px 0;
+  }
+
+  .flex-product-desc {
+    display: none;
+  }
+
+  .flex-card-actions {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-top: auto;
+  }
+
+  .flex-qty-buy-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    width: 100%;
+  }
+
+  .flex-quantity-wrapper {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border: 1px solid #111111;
+    border-radius: 30px;
+    padding: 6px 10px;
+    flex: 0 0 100px;
+    background: #ffffff;
+    box-sizing: border-box;
+  }
+
+  .flex-qty-btn {
+    background: none;
+    border: none;
+    font-size: 16px;
+    cursor: pointer;
+    color: #333;
+    padding: 0 4px;
+  }
+
+  .flex-qty-input {
+    border: none;
+    background: none;
+    text-align: center;
+    font-size: 14px;
+    width: 35px;
+    font-weight: 600;
+    outline: none;
+    padding: 0;
+    -moz-appearance: textfield;
+  }
+
+  .flex-qty-input::-webkit-outer-spin-button,
+  .flex-qty-input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+  }
+
+  .flex-buy-now-btn {
+    flex: 1;
+    background-color: {{ section.settings.buy_button_bg }};
+    color: {{ section.settings.buy_button_text }};
+    border: none;
+    border-radius: 30px;
+    padding: 10px 12px;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    text-align: center;
+    transition: opacity 0.2s ease, transform 0.2s ease;
+    white-space: nowrap;
+  }
+
+  .flex-buy-now-btn:hover {
+    opacity: 0.9;
+    transform: translateY(-1px);
+  }
+
+  .flex-add-to-cart-btn {
+    background-color: {{ section.settings.atc_button_bg }};
+    color: {{ section.settings.atc_button_text }};
+    border: none;
+    border-radius: 30px;
+    padding: 11px 18px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    width: 100%;
+    transition: opacity 0.2s ease, transform 0.2s ease;
+  }
+
+  .flex-add-to-cart-btn:hover {
+    opacity: 0.9;
+    transform: translateY(-1px);
+  }
+
+  .adv-filter-backdrop {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,0.4);
+    z-index: 999;
+    display: none;
+  }
+  .adv-filter-backdrop.active { display: block; }
+{% endstyle %}
+
+<div class="adv-collection-section">
+  <div class="adv-container">
+    
+    <!-- Header info -->
+    <div class="adv-collection-header">
+      <div class="adv-breadcrumb">
+        <a href="{{ routes.root_url }}">Home</a> &gt; <span>{{ collection.title | default: "All Products" }}</span>
+      </div>
+      <h1 class="adv-collection-title">{{ collection.title | default: "Products" }}</h1>
+      {%- if collection.description != blank -%}
+        <div class="adv-collection-desc">{{ collection.description }}</div>
+      {%- endif -%}
+    </div>
+
+    <!-- Toolbar -->
+    <div class="adv-toolbar">
+      <div class="adv-toolbar-left">
+        {%- if section.settings.enable_filtering -%}
+          <button type="button" class="adv-filter-toggle-btn" onclick="toggleMobileFilter()">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="4" y1="21" x2="4" y2="14"></line><line x1="4" y1="10" x2="4" y2="3"></line><line x1="12" y1="21" x2="12" y2="12"></line><line x1="12" y1="8" x2="12" y2="3"></line><line x1="20" y1="21" x2="20" y2="16"></line><line x1="20" y1="12" x2="20" y2="3"></line><line x1="1" y1="14" x2="7" y2="14"></line><line x1="9" y1="8" x2="15" y2="8"></line><line x1="17" y1="16" x2="23" y2="16"></line></svg>
+            Filters
+          </button>
+        {%- endif -%}
+
+        {%- if section.settings.enable_sorting -%}
+          <div class="adv-sort-wrapper">
+            <button type="button" class="adv-sort-toggle" onclick="toggleSortDropdown()">
+              <span id="CurrentSortLabel">Featured</span>
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M6 9l6 6 6-6"/></svg>
+            </button>
+            <div class="adv-sort-dropdown-menu" id="SortDropdownMenu">
+              <span class="adv-sort-item" onclick="applySort('manual', 'Featured')">Featured</span>
+              <span class="adv-sort-item" onclick="applySort('best-selling', 'Best selling')">Best selling</span>
+              <span class="adv-sort-item" onclick="applySort('title-ascending', 'Alphabetically, A-Z')">Alphabetically, A-Z</span>
+              <span class="adv-sort-item" onclick="applySort('title-descending', 'Alphabetically, Z-A')">Alphabetically, Z-A</span>
+              <span class="adv-sort-item" onclick="applySort('price-ascending', 'Price, low to high')">Price, low to high</span>
+              <span class="adv-sort-item" onclick="applySort('price-descending', 'Price, high to low')">Price, high to low</span>
+              <span class="adv-sort-item" onclick="applySort('created-ascending', 'Date, old to new')">Date, old to new</span>
+              <span class="adv-sort-item" onclick="applySort('created-descending', 'Date, new to old')">Date, new to old</span>
+            </div>
+          </div>
+        {%- endif -%}
+      </div>
+
+      <!-- Grid Tally Switcher -->
+      <div class="adv-grid-switcher">
+        <button type="button" class="grid-switch-btn" onclick="setGridColumns(1, this)" title="List View">&equiv;</button>
+        <button type="button" class="grid-switch-btn" onclick="setGridColumns(2, this)" title="2 Columns">||</button>
+        <button type="button" class="grid-switch-btn" onclick="setGridColumns(3, this)" title="3 Columns">|||</button>
+        <button type="button" class="grid-switch-btn {% if section.settings.columns_desktop == 4 %}active{% endif %}" onclick="setGridColumns(4, this)" title="4 Columns">||||</button>
+        <button type="button" class="grid-switch-btn {% if section.settings.columns_desktop == 5 %}active{% endif %}" onclick="setGridColumns(5, this)" title="5 Columns">|||||</button>
+      </div>
+    </div>
+
+    <!-- Main Layout -->
+    <div class="adv-main-layout">
+      
+      <!-- Filter Sidebar with Accordions -->
+      <div class="adv-filters-sidebar" id="FilterSidebar">
+        <div class="adv-filter-header-mobile">
+          <span>Filters</span>
+          <button type="button" onclick="toggleMobileFilter()" style="background:none; border:none; font-size:22px; cursor:pointer;">&times;</button>
+        </div>
+
+        <!-- Availability Accordion Group -->
+        <div class="filter-group" id="GroupAvailability">
+          <div class="filter-group-title" onclick="toggleAccordion('GroupAvailability')">
+            <span>Availability</span>
+            <svg class="thin-arrow" viewBox="0 0 24 24"><polyline points="18 15 12 9 6 15"></polyline></svg>
+          </div>
+          <div class="filter-group-content">
+            <div class="filter-options-box">
+              <label class="filter-option-label"><input type="checkbox" class="availability-filter" value="in-stock" onchange="filterProducts()"> In stock</label>
+              <label class="filter-option-label"><input type="checkbox" class="availability-filter" value="out-of-stock" onchange="filterProducts()"> Out of stock</label>
+            </div>
+          </div>
+        </div>
+
+        <!-- Price Accordion Group -->
+        <div class="filter-group" id="GroupPrice">
+          <div class="filter-group-title" onclick="toggleAccordion('GroupPrice')">
+            <span>Price</span>
+            <svg class="thin-arrow" viewBox="0 0 24 24"><polyline points="18 15 12 9 6 15"></polyline></svg>
+          </div>
+          <div class="filter-group-content">
+            <div class="price-slider-box">
+              <div class="dual-range-container">
+                <div class="slider-track"></div>
+                <div class="slider-range-fill" id="SliderRangeFill"></div>
+                <input type="range" id="RangeMin" min="0" max="5000" value="0" oninput="updateDualRange('min')">
+                <input type="range" id="RangeMax" min="0" max="5000" value="5000" oninput="updateDualRange('max')">
+              </div>
+              <div class="price-inputs">
+                <input type="number" id="PriceMinInput" value="0" min="0" onchange="syncInputToRange('min')">
+                <span>To</span>
+                <input type="number" id="PriceMaxInput" value="5000" min="0" onchange="syncInputToRange('max')">
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Products Grid Display -->
+      <div class="adv-products-grid cols-{{ section.settings.columns_desktop }}" id="AdvProductsGrid">
+        {%- assign dynamic_products = collection.products | default: collections.all.products -%}
+        {%- if dynamic_products != blank and dynamic_products.size > 0 -%}
+          {%- for product in dynamic_products limit: section.settings.products_per_page -%}
+            {%- assign product_price_val = product.price | divided_by: 100.0 -%}
+            <div class="flex-product-card" data-price="{{ product_price_val }}" data-available="{% if product.available %}in-stock{% else %}out-of-stock{% endif %}">
+              <a href="{{ product.url }}" class="flex-card-image-box">
+                {%- if product.featured_image != blank -%}
+                  <img src="{{ product.featured_image | image_url: width: 600 }}" alt="{{ product.title | escape }}" loading="lazy">
+                {%- else -%}
+                  {{ 'product-1' | placeholder_svg_tag: 'placeholder-svg' }}
+                {%- endif -%}
+              </a>
+
+              <div class="flex-card-details">
+                <a href="{{ product.url }}" class="flex-product-title">{{ product.title }}</a>
+                <div class="flex-product-price">€{{ product_price_val | replace: ',', '.' }}</div>
+                
+                {%- if product.description != blank -%}
+                  <div class="flex-product-desc">{{ product.description | strip_html | truncatewords: 20 }}</div>
+                {%- else -%}
+                  <div class="flex-product-desc">Please send us in the checkout note the following information: Leave the name(s) and FONT you...</div>
+                {%- endif -%}
+
+                <div class="flex-card-actions">
+                  <div class="flex-qty-buy-row">
+                    <div class="flex-quantity-wrapper">
+                      <button type="button" class="flex-qty-btn minus" onclick="adjustFlexQty(this, -1)">-</button>
+                      <input type="number" class="flex-qty-input" value="1" min="1" readonly>
+                      <button type="button" class="flex-qty-btn plus" onclick="adjustFlexQty(this, 1)">+</button>
+                    </div>
+                    <button type="button" class="flex-buy-now-btn" onclick="directCheckout('{{ product.selected_or_first_available_variant.id }}', this)">
+                      Buy Now
+                    </button>
+                  </div>
+                  <button type="button" class="flex-add-to-cart-btn" onclick="addFlexProductToCart('{{ product.selected_or_first_available_variant.id }}', this)">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"></path><line x1="3" y1="6" x2="21" y2="6"></line><path d="M16 10a4 4 0 0 1-8 0"></path></svg>
+                    ADD TO CART
+                  </button>
+                </div>
+              </div>
+            </div>
+          {%- endfor -%}
+        {%- else -%}
+          <!-- Fallback Demo Items -->
+          {%- assign demo_titles = "Mothers Necklace, Children Names Jewelry, Heart Name Necklace,Grandma Jewelry, Grandmother Necklace with Names, Custom Grandma Gift" | split: "," -%}
+          {%- for i in (1..section.settings.products_per_page) -%}
+            {%- assign title_index = forloop.index0 | modulo: 2 -%}
+            {%- assign demo_price = forloop.index | times: 350 | plus: 2000 -%}
+            <div class="flex-product-card" data-price="{{ demo_price }}" data-available="in-stock">
+              <a href="#" class="flex-card-image-box">
+                {{ 'collection-1' | placeholder_svg_tag: 'placeholder-svg' }}
+              </a>
+
+              <div class="flex-card-details">
+                <a href="#" class="flex-product-title">{{ demo_titles[title_index] }}</a>
+                <div class="flex-product-price">€{{ demo_price }}.00</div>
+                <div class="flex-product-desc">Please send us in the checkout note the following information: Leave the name(s) and FONT you...</div>
+
+                <div class="flex-card-actions">
+                  <div class="flex-qty-buy-row">
+                    <div class="flex-quantity-wrapper">
+                      <button type="button" class="flex-qty-btn minus" onclick="adjustFlexQty(this, -1)">-</button>
+                      <input type="number" class="flex-qty-input" value="1" min="1" readonly>
+                      <button type="button" class="flex-qty-btn plus" onclick="adjustFlexQty(this, 1)">+</button>
+                    </div>
+                    <button type="button" class="flex-buy-now-btn" onclick="alert('Demo Checkout!')">Buy Now</button>
+                  </div>
+                  <button type="button" class="flex-add-to-cart-btn" onclick="alert('Demo Added!')">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"></path><line x1="3" y1="6" x2="21" y2="6"></line><path d="M16 10a4 4 0 0 1-8 0"></path></svg>
+                    ADD TO CART
+                  </button>
+                </div>
+              </div>
+            </div>
+          {%- endfor -%}
+        {%- endif -%}
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- Mobile Filter & Sort Bottom Sheets / Backdrops -->
+<div class="adv-filter-backdrop" id="FilterBackdrop" onclick="toggleMobileFilter()"></div>
+
+<div class="adv-sort-backdrop" id="SortBackdrop" onclick="toggleSortDropdown()"></div>
+<div class="adv-sort-bottom-sheet" id="SortBottomSheet">
+  <div class="sheet-header">
+    <span>Sort by</span>
+    <button type="button" onclick="toggleSortDropdown()" style="background:none; border:none; font-size:24px; cursor:pointer;">&times;</button>
+  </div>
+  <div style="display: flex; flex-direction: column;">
+    <span class="adv-sort-item" onclick="applySort('manual', 'Featured')">Featured</span>
+    <span class="adv-sort-item" onclick="applySort('best-selling', 'Best selling')">Best selling</span>
+    <span class="adv-sort-item" onclick="applySort('title-ascending', 'Alphabetically, A-Z')">Alphabetically, A-Z</span>
+    <span class="adv-sort-item" onclick="applySort('title-descending', 'Alphabetically, Z-A')">Alphabetically, Z-A</span>
+    <span class="adv-sort-item" onclick="applySort('price-ascending', 'Price, low to high')">Price, low to high</span>
+    <span class="adv-sort-item" onclick="applySort('price-descending', 'Price, high to low')">Price, high to low</span>
+    <span class="adv-sort-item" onclick="applySort('created-ascending', 'Date, old to new')">Date, old to new</span>
+    <span class="adv-sort-item" onclick="applySort('created-descending', 'Date, new to old')">Date, new to old</span>
+  </div>
+</div>
+
+<script>
+  // Accordion Toggle Function
+  function toggleAccordion(groupId) {
+    const group = document.getElementById(groupId);
+    if (group) {
+      group.classList.toggle('collapsed');
+    }
+  }
+
+  // Dual Range Slider Handler with Black Fill Track
+  function updateDualRange(source) {
+    const minRange = document.getElementById('RangeMin');
+    const maxRange = document.getElementById('RangeMax');
+    const minInput = document.getElementById('PriceMinInput');
+    const maxInput = document.getElementById('PriceMaxInput');
+    const fillTrack = document.getElementById('SliderRangeFill');
+
+    let minVal = parseInt(minRange.value);
+    let maxVal = parseInt(maxRange.value);
+    let maxLimit = parseInt(maxRange.max) || 5000;
+
+    if (minVal > maxVal) {
+      if (source === 'min') {
+        minRange.value = maxVal;
+        minVal = maxVal;
+      } else {
+        maxRange.value = minVal;
+        maxVal = minVal;
+      }
+    }
+
+    minInput.value = minVal;
+    maxInput.value = maxVal;
+
+    const percentMin = (minVal / maxLimit) * 100;
+    const percentMax = (maxVal / maxLimit) * 100;
+    fillTrack.style.left = percentMin + '%';
+    fillTrack.style.width = (percentMax - percentMin) + '%';
+
+    filterProducts();
+  }
+
+  function syncInputToRange(source) {
+    const minRange = document.getElementById('RangeMin');
+    const maxRange = document.getElementById('RangeMax');
+    const minInput = document.getElementById('PriceMinInput');
+    const maxInput = document.getElementById('PriceMaxInput');
+
+    let minVal = parseInt(minInput.value) || 0;
+    let maxVal = parseInt(maxInput.value) || 5000;
+
+    if (minVal > maxVal) minVal = maxVal;
+
+    minRange.value = minVal;
+    maxRange.value = maxVal;
+
+    updateDualRange('min');
+  }
+
+  window.addEventListener('DOMContentLoaded', () => {
+    updateDualRange('min');
+  });
+
+  function filterProducts() {
+    const minVal = parseFloat(document.getElementById('PriceMinInput').value) || 0;
+    const maxVal = parseFloat(document.getElementById('PriceMaxInput').value) || 5000;
+    
+    const checkedAvailability = Array.from(document.querySelectorAll('.availability-filter:checked'))
+                                     .map(cb => cb.value);
+
+    const cards = document.querySelectorAll('.flex-product-card');
+
+    cards.forEach(card => {
+      const price = parseFloat(card.getAttribute('data-price')) || 0;
+      const availability = card.getAttribute('data-available');
+
+      let matchesPrice = (price >= minVal && price <= maxVal);
+      let matchesAvailability = (checkedAvailability.length === 0 || checkedAvailability.includes(availability));
+
+      if (matchesPrice && matchesAvailability) {
+        card.style.display = 'flex';
+      } else {
+        card.style.display = 'none';
+      }
+    });
+  }
+
+  function setGridColumns(cols, btn) {
+    const grid = document.getElementById('AdvProductsGrid');
+    if (!grid) return;
+    grid.className = 'adv-products-grid cols-' + cols;
+    
+    document.querySelectorAll('.grid-switch-btn').forEach(b => b.classList.remove('active'));
+    if (btn) btn.classList.add('active');
+  }
+
+  function toggleMobileFilter() {
+    const sidebar = document.getElementById('FilterSidebar');
+    const backdrop = document.getElementById('FilterBackdrop');
+    sidebar.classList.toggle('mobile-open');
+    backdrop.classList.toggle('active');
+  }
+
+  function toggleSortDropdown() {
+    const menu = document.getElementById('SortDropdownMenu');
+    const sheet = document.getElementById('SortBottomSheet');
+    const backdrop = document.getElementById('SortBackdrop');
+
+    if (window.innerWidth <= 768) {
+      sheet.classList.toggle('active');
+      backdrop.classList.toggle('active');
+    } else {
+      menu.classList.toggle('is-open');
+    }
+  }
+
+  function applySort(sortVal, labelText) {
+    document.getElementById('CurrentSortLabel').innerText = labelText;
+    toggleSortDropdown();
+    const url = new URL(window.location.href);
+    url.searchParams.set('sort_by', sortVal);
+    window.location.href = url.href;
+  }
+
+  window.addEventListener('click', function(e) {
+    if (!e.target.closest('.adv-sort-wrapper') && !e.target.closest('#SortBottomSheet')) {
+      document.getElementById('SortDropdownMenu').classList.remove('is-open');
+      document.getElementById('SortBottomSheet').classList.remove('active');
+      document.getElementById('SortBackdrop').classList.remove('active');
+    }
+  });
+
+  function adjustFlexQty(button, change) {
+    const wrapper = button.closest('.flex-card-actions');
+    const input = wrapper.querySelector('.flex-qty-input');
+    let currentValue = parseInt(input.value) || 1;
+    let newValue = currentValue + change;
+    if (newValue < 1) newValue = 1;
+    input.value = newValue;
+  }
+
+  function addFlexProductToCart(variantId, button) {
+    const wrapper = button.closest('.flex-card-actions');
+    const quantity = parseInt(wrapper.querySelector('.flex-qty-input').value) || 1;
+
+    let formData = {
+      'items': [{ 'id': variantId, 'quantity': quantity }]
+    };
+
+    fetch('/cart/add.js', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(formData)
+    })
+    .then(response => response.json())
+    .then(data => {
+      if (document.querySelector('cart-drawer')) {
+        document.querySelector('cart-drawer').open();
+      } else {
+        window.location.reload();
+      }
+    })
+    .catch((error) => {
+      console.error('Error adding to cart:', error);
+    });
+  }
+
+  function directCheckout(variantId, button) {
+    const wrapper = button.closest('.flex-card-actions');
+    const quantity = parseInt(wrapper.querySelector('.flex-qty-input').value) || 1;
+
+    let formData = {
+      'items': [{ 'id': variantId, 'quantity': quantity }]
+    };
+
+    fetch('/cart/add.js', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(formData)
+    })
+    .then(response => response.json())
+    .then(data => {
+      window.location.href = '/checkout';
+    })
+    .catch((error) => {
+      console.error('Error during Buy Now:', error);
+    });
+  }
+</script>
