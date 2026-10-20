@@ -1,0 +1,862 @@
+{% schema %}
+{
+  "name": "Custom Product Page",
+  "tag": "section",
+  "class": "product-page-section",
+  "settings": [
+    {
+      "type": "range",
+      "id": "container_width",
+      "min": 1000,
+      "max": 1800,
+      "step": 10,
+      "unit": "px",
+      "label": "Max Container Width",
+      "default": 1400
+    },
+    {
+      "type": "header",
+      "content": "Desktop Layout & Padding"
+    },
+    {
+      "type": "range",
+      "id": "padding_top_desktop",
+      "min": 0,
+      "max": 150,
+      "step": 5,
+      "unit": "px",
+      "label": "Desktop Padding Top",
+      "default": 50
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom_desktop",
+      "min": 0,
+      "max": 150,
+      "step": 5,
+      "unit": "px",
+      "label": "Desktop Padding Bottom",
+      "default": 80
+    },
+    {
+      "type": "range",
+      "id": "title_font_desktop",
+      "min": 18,
+      "max": 60,
+      "step": 1,
+      "unit": "px",
+      "label": "Title Font Size (Desktop)",
+      "default": 32
+    },
+    {
+      "type": "header",
+      "content": "Mobile Layout & Padding"
+    },
+    {
+      "type": "range",
+      "id": "padding_top_mobile",
+      "min": 0,
+      "max": 100,
+      "step": 5,
+      "unit": "px",
+      "label": "Mobile Padding Top",
+      "default": 30
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom_mobile",
+      "min": 0,
+      "max": 100,
+      "step": 5,
+      "unit": "px",
+      "label": "Mobile Padding Bottom",
+      "default": 40
+    },
+    {
+      "type": "range",
+      "id": "title_font_mobile",
+      "min": 16,
+      "max": 40,
+      "step": 1,
+      "unit": "px",
+      "label": "Title Font Size (Mobile)",
+      "default": 24
+    },
+    {
+      "type": "header",
+      "content": "Image Gallery & Thumbnails"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_thumbnails",
+      "label": "Show Thumbnail Images",
+      "default": true
+    },
+    {
+      "type": "select",
+      "id": "thumbnail_position",
+      "label": "Thumbnail Position",
+      "options": [
+        { "value": "bottom", "label": "Bottom" },
+        { "value": "top", "label": "Top" },
+        { "value": "left", "label": "Left" },
+        { "value": "right", "label": "Right" }
+      ],
+      "default": "bottom"
+    },
+    {
+      "type": "select",
+      "id": "thumbnail_layout",
+      "label": "Thumbnail Placement Style",
+      "options": [
+        { "value": "outside", "label": "Outside Main Image" },
+        { "value": "inside", "label": "Inside Main Image (Overlay)" }
+      ],
+      "default": "outside"
+    },
+    {
+      "type": "range",
+      "id": "border_radius",
+      "min": 0,
+      "max": 40,
+      "step": 2,
+      "unit": "px",
+      "label": "Border Radius (Images & Buttons)",
+      "default": 12
+    },
+    {
+      "type": "header",
+      "content": "Visibility Settings"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_vendor",
+      "label": "Show Vendor",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_share",
+      "label": "Show Social Share",
+      "default": true
+    },
+    {
+      "type": "header",
+      "content": "Color Settings"
+    },
+    {
+      "type": "color",
+      "id": "bg_color",
+      "label": "Section Background",
+      "default": "#FDFBF7"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Main Text Color",
+      "default": "#111111"
+    },
+    {
+      "type": "color",
+      "id": "price_color",
+      "label": "Price Color",
+      "default": "#000000"
+    },
+    {
+      "type": "color",
+      "id": "atc_bg",
+      "label": "Add to Cart Button BG",
+      "default": "#111111"
+    },
+    {
+      "type": "color",
+      "id": "atc_text",
+      "label": "Add to Cart Button Text",
+      "default": "#ffffff"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Custom Product Page"
+    }
+  ]
+}
+{% endschema %}
+
+{% style %}
+  .custom-pdp-wrapper {
+    background-color: {{ section.settings.bg_color }};
+    padding-top: {{ section.settings.padding_top_desktop }}px;
+    padding-bottom: {{ section.settings.padding_bottom_desktop }}px;
+    padding-left: 20px;
+    padding-right: 20px;
+    width: 100vw;
+    position: relative;
+    left: 50%;
+    right: 50%;
+    margin-left: -50vw;
+    margin-right: -50vw;
+    box-sizing: border-box;
+    font-family: inherit;
+    color: {{ section.settings.text_color }};
+  }
+
+  @media screen and (max-width: 768px) {
+    .custom-pdp-wrapper {
+      padding-top: {{ section.settings.padding_top_mobile }}px;
+      padding-bottom: {{ section.settings.padding_bottom_mobile }}px;
+    }
+  }
+
+  .custom-pdp-container {
+    max-width: {{ section.settings.container_width }}px;
+    margin: 0 auto;
+    width: 100%;
+    box-sizing: border-box;
+  }
+
+  .pdp-grid-layout {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 50px;
+    align-items: start;
+  }
+
+  @media screen and (max-width: 900px) {
+    .pdp-grid-layout {
+      grid-template-columns: 1fr;
+      gap: 30px;
+    }
+  }
+
+  /* Gallery Container Alignments */
+  .pdp-gallery-container {
+    position: sticky;
+    top: 30px;
+    display: flex;
+    gap: 15px;
+    width: 100%;
+    align-items: flex-start;
+  }
+
+  .pdp-gallery-container.pos-bottom { flex-direction: column; }
+  .pdp-gallery-container.pos-top { flex-direction: column-reverse; }
+  .pdp-gallery-container.pos-left { flex-direction: row-reverse; }
+  .pdp-gallery-container.pos-right { flex-direction: row; }
+
+  @media screen and (max-width: 768px) {
+    .pdp-gallery-container.pos-left,
+    .pdp-gallery-container.pos-right {
+      flex-direction: column;
+    }
+  }
+
+  .pdp-main-image-wrapper {
+    position: relative;
+    width: 100%;
+    flex: 1;
+    background-color: #FAF5EF;
+    border-radius: {{ section.settings.border_radius }}px;
+    overflow: hidden;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.03);
+  }
+
+  .pdp-main-image-box {
+    width: 100%;
+    aspect-ratio: 1 / 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .pdp-main-image-box img,
+  .pdp-main-image-box svg {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+
+  /* Arrow Buttons with High Z-Index */
+  .pdp-arrow-btn {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    background: rgba(255, 255, 255, 0.95);
+    border: 1px solid #111;
+    border-radius: 50%;
+    width: 38px;
+    height: 38px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    z-index: 99 !important; /* High z-index to stay above thumbnails */
+    transition: all 0.2s;
+    font-weight: bold;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+  }
+
+  .pdp-arrow-btn:hover {
+    background: #111;
+    color: #fff;
+  }
+
+  .pdp-arrow-btn.prev { left: 15px; }
+  .pdp-arrow-btn.next { right: 15px; }
+
+  /* Shift Left Arrow when Inside Overlay & Left Position is active */
+  .pdp-gallery-container.layout-inside.pos-left .pdp-arrow-btn.prev {
+    left: 100px; /* Offset so arrow doesn't cover left thumbnails */
+  }
+
+  .pdp-gallery-container.layout-inside.pos-right .pdp-arrow-btn.next {
+    right: 100px; /* Offset so arrow doesn't cover right thumbnails */
+  }
+
+  /* Thumbnails Container */
+  .pdp-thumbnails-wrapper {
+    position: relative;
+    display: {% if section.settings.show_thumbnails %}block{% else %}none{% endif %};
+  }
+
+  /* Outside Layout */
+  .pdp-gallery-container.layout-outside .pdp-thumbnails-wrapper {
+    width: auto;
+  }
+
+  .pdp-gallery-container.layout-outside.pos-left .pdp-thumbnails-grid,
+  .pdp-gallery-container.layout-outside.pos-right .pdp-thumbnails-grid {
+    flex-direction: column;
+    justify-content: flex-start;
+    max-height: 480px;
+    overflow-y: auto;
+    overflow-x: hidden;
+  }
+
+  .pdp-gallery-container.layout-outside.pos-top .pdp-thumbnails-grid,
+  .pdp-gallery-container.layout-outside.pos-bottom .pdp-thumbnails-grid {
+    flex-direction: row;
+    justify-content: flex-start;
+    overflow-x: auto;
+    overflow-y: hidden;
+  }
+
+  /* Inside Overlay Alignment */
+  .pdp-gallery-container.layout-inside .pdp-thumbnails-wrapper {
+    position: absolute;
+    z-index: 10;
+    padding: 15px;
+  }
+
+  .pdp-gallery-container.layout-inside.pos-bottom .pdp-thumbnails-wrapper {
+    bottom: 0;
+    left: 0;
+    transform: none;
+    width: 100%;
+  }
+
+  .pdp-gallery-container.layout-inside.pos-top .pdp-thumbnails-wrapper {
+    top: 0;
+    left: 0;
+    transform: none;
+    width: 100%;
+  }
+
+  .pdp-gallery-container.layout-inside.pos-left .pdp-thumbnails-wrapper {
+    top: 0;
+    left: 0;
+    transform: none;
+  }
+
+  .pdp-gallery-container.layout-inside.pos-right .pdp-thumbnails-wrapper {
+    top: 0;
+    right: 0;
+    transform: none;
+  }
+
+  .pdp-gallery-container.layout-inside.pos-left .pdp-thumbnails-grid,
+  .pdp-gallery-container.layout-inside.pos-right .pdp-thumbnails-grid {
+    flex-direction: column;
+    justify-content: flex-start;
+    max-height: 100%;
+  }
+
+  .pdp-gallery-container.layout-inside.pos-top .pdp-thumbnails-grid,
+  .pdp-gallery-container.layout-inside.pos-bottom .pdp-thumbnails-grid {
+    flex-direction: row;
+    justify-content: flex-start;
+  }
+
+  .pdp-thumbnails-grid {
+    display: flex;
+    gap: 10px;
+    scroll-behavior: smooth;
+    padding: 2px;
+    scrollbar-width: none;
+  }
+
+  .pdp-thumbnails-grid::-webkit-scrollbar {
+    display: none;
+  }
+
+  .pdp-thumb-item {
+    width: 75px;
+    height: 75px;
+    border-radius: {{ section.settings.border_radius | divided_by: 1.5 }}px;
+    overflow: hidden;
+    cursor: pointer;
+    border: 2px solid rgba(255, 255, 255, 0.8);
+    flex-shrink: 0;
+    background-color: #FAF5EF;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    transition: border-color 0.2s, transform 0.2s;
+  }
+
+  .pdp-thumb-item.active, .pdp-thumb-item:hover {
+    border-color: #111;
+    transform: scale(1.03);
+  }
+
+  .pdp-thumb-item img,
+  .pdp-thumb-item svg {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  /* Details Styling */
+  .pdp-details-box {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .pdp-vendor {
+    font-size: 13px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: #777;
+    margin-bottom: 8px;
+  }
+
+  .pdp-title {
+    font-size: {{ section.settings.title_font_desktop }}px;
+    font-weight: 500;
+    margin: 0 0 14px 0;
+    font-family: Georgia, serif;
+    line-height: 1.2;
+  }
+
+  @media screen and (max-width: 768px) {
+    .pdp-title {
+      font-size: {{ section.settings.title_font_mobile }}px;
+    }
+  }
+
+  .pdp-price-box {
+    font-size: 22px;
+    font-weight: 600;
+    color: {{ section.settings.price_color }};
+    margin-bottom: 16px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .pdp-stock-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 13px;
+    font-weight: 500;
+    color: #2e7d32;
+    background: #e8f5e9;
+    padding: 5px 12px;
+    border-radius: 20px;
+    width: fit-content;
+    margin-bottom: 20px;
+  }
+
+  .pdp-stock-badge span {
+    width: 7px;
+    height: 7px;
+    background-color: #2e7d32;
+    border-radius: 50%;
+  }
+
+  .pdp-short-desc {
+    font-size: 14px;
+    line-height: 1.6;
+    color: #555;
+    margin-bottom: 25px;
+    border-top: 1px solid #eae5df;
+    border-bottom: 1px solid #eae5df;
+    padding: 15px 0;
+  }
+
+  .pdp-actions-container {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin-top: 10px;
+  }
+
+  .pdp-qty-atc-row {
+    display: flex;
+    gap: 12px;
+  }
+
+  .pdp-quantity-wrapper {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border: 1px solid #111;
+    border-radius: {{ section.settings.border_radius }}px;
+    padding: 8px 14px;
+    width: 130px;
+    background: #fff;
+    box-sizing: border-box;
+  }
+
+  .pdp-qty-btn {
+    background: none;
+    border: none;
+    font-size: 18px;
+    cursor: pointer;
+    color: #111;
+  }
+
+  .pdp-qty-input {
+    border: none;
+    background: none;
+    text-align: center;
+    font-size: 15px;
+    width: 40px;
+    font-weight: 600;
+    outline: none;
+  }
+
+  .pdp-atc-btn {
+    flex: 1;
+    background-color: {{ section.settings.atc_bg }};
+    color: {{ section.settings.atc_text }};
+    border: none;
+    border-radius: {{ section.settings.border_radius }}px;
+    padding: 14px 24px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    transition: opacity 0.2s;
+  }
+
+  .pdp-atc-btn:hover {
+    opacity: 0.9;
+  }
+
+  .pdp-buy-now-btn {
+    width: 100%;
+    background-color: #EFECE6;
+    color: #111;
+    border: 1px solid #111;
+    border-radius: {{ section.settings.border_radius }}px;
+    padding: 14px 24px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    transition: background 0.2s;
+  }
+
+  .pdp-buy-now-btn:hover {
+    background-color: #e2ded7;
+  }
+
+  .pdp-accordion-section {
+    margin-top: 35px;
+    border-top: 1px solid #eae5df;
+  }
+
+  .pdp-accordion-item {
+    border-bottom: 1px solid #eae5df;
+  }
+
+  .pdp-accordion-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 18px 0;
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+  }
+
+  .pdp-accordion-content {
+    font-size: 14px;
+    color: #555;
+    line-height: 1.6;
+    padding-bottom: 18px;
+    display: none;
+  }
+
+  .pdp-accordion-item.open .pdp-accordion-content {
+    display: block;
+  }
+{% endstyle %}
+
+<div class="custom-pdp-wrapper" id="CustomProductSection-{{ section.id }}">
+  <div class="custom-pdp-container">
+    
+    {%- assign active_product = product -%}
+    {%- if active_product == blank -%}
+      {%- assign active_product = collections.all.products.first -%}
+    {%- endif -%}
+
+    {%- assign product_images = active_product.images -%}
+
+    <div class="pdp-grid-layout">
+      
+      <!-- Gallery Container -->
+      <div class="pdp-gallery-container pos-{{ section.settings.thumbnail_position }} layout-{{ section.settings.thumbnail_layout }}">
+        
+        <div class="pdp-main-image-wrapper">
+          <button type="button" class="pdp-arrow-btn prev" onclick="slideGallery(-1)">&#10094;</button>
+          
+          <div class="pdp-main-image-box" id="MainImageContainer-{{ section.id }}">
+            {%- if product_images.size > 0 -%}
+              <img src="{{ product_images[0] | image_url: width: 1000 }}" alt="{{ active_product.title | escape }}" id="MainProductImage-{{ section.id }}">
+            {%- else -%}
+              {{ 'product-1' | placeholder_svg_tag: 'placeholder-svg' }}
+            {%- endif -%}
+          </div>
+
+          <button type="button" class="pdp-arrow-btn next" onclick="slideGallery(1)">&#10095;</button>
+
+          <!-- Inside Overlay Thumbnails -->
+          {%- if section.settings.thumbnail_layout == 'inside' and section.settings.show_thumbnails -%}
+            <div class="pdp-thumbnails-wrapper">
+              <div class="pdp-thumbnails-grid" id="ThumbnailsGridInside-{{ section.id }}">
+                {%- if product_images.size > 0 -%}
+                  {%- for image in product_images -%}
+                    <div class="pdp-thumb-item {% if forloop.first %}active{% endif %}" data-img-src="{{ image | image_url: width: 1000 }}" onclick="setGalleryImage('{{ image | image_url: width: 1000 }}', {{ forloop.index0 }})">
+                      <img src="{{ image | image_url: width: 200 }}" alt="{{ active_product.title | escape }}" loading="lazy">
+                    </div>
+                  {%- endfor -%}
+                {%- else -%}
+                  {%- for i in (1..4) -%}
+                    <div class="pdp-thumb-item {% if forloop.first %}active{% endif %}" onclick="setGalleryImage('', {{ forloop.index0 }})">
+                      {{ 'product-1' | placeholder_svg_tag: 'placeholder-svg' }}
+                    </div>
+                  {%- endfor -%}
+                {%- endif -%}
+              </div>
+            </div>
+          {%- endif -%}
+        </div>
+
+        <!-- Outside Thumbnails -->
+        {%- if section.settings.thumbnail_layout == 'outside' and section.settings.show_thumbnails -%}
+          <div class="pdp-thumbnails-wrapper">
+            <div class="pdp-thumbnails-grid" id="ThumbnailsGridOutside-{{ section.id }}">
+              {%- if product_images.size > 0 -%}
+                {%- for image in product_images -%}
+                  <div class="pdp-thumb-item {% if forloop.first %}active{% endif %}" data-img-src="{{ image | image_url: width: 1000 }}" onclick="setGalleryImage('{{ image | image_url: width: 1000 }}', {{ forloop.index0 }})">
+                    <img src="{{ image | image_url: width: 200 }}" alt="{{ active_product.title | escape }}" loading="lazy">
+                  </div>
+                {%- endfor -%}
+              {%- else -%}
+                {%- for i in (1..4) -%}
+                  <div class="pdp-thumb-item {% if forloop.first %}active{% endif %}" onclick="setGalleryImage('', {{ forloop.index0 }})">
+                    {{ 'product-1' | placeholder_svg_tag: 'placeholder-svg' }}
+                  </div>
+                {%- endfor -%}
+              {%- endif -%}
+            </div>
+          </div>
+        {%- endif -%}
+
+      </div>
+
+      <!-- Details -->
+      <div class="pdp-details-box">
+        {%- if section.settings.show_vendor and active_product.vendor != blank -%}
+          <div class="pdp-vendor">{{ active_product.vendor }}</div>
+        {%- endif -%}
+
+        <h1 class="pdp-title">{{ active_product.title | default: "Mothers Necklace & Custom Jewelry" }}</h1>
+
+        <div class="pdp-price-box">
+          <span id="ProductPrice">{{ active_product.price | money | default: "€25.68" }}</span>
+        </div>
+
+        <div class="pdp-stock-badge">
+          <span></span> In stock, ready to ship
+        </div>
+
+        <div class="pdp-short-desc">
+          {%- if active_product.description != blank -%}
+            {{ active_product.description | strip_html | truncatewords: 30 }}
+          {%- else -%}
+            Please send us in the checkout note the following information: Leave the name(s) and FONT you want engraved on your custom jewelry piece. Handcrafted with premium materials.
+          {%- endif -%}
+        </div>
+
+        <!-- Quantity & Actions -->
+        <div class="pdp-actions-container">
+          <div class="pdp-qty-atc-row">
+            <div class="pdp-quantity-wrapper">
+              <button type="button" class="pdp-qty-btn" onclick="adjustPdpQty(-1)">-</button>
+              <input type="number" id="PdpQtyInput" class="pdp-qty-input" value="1" min="1" readonly>
+              <button type="button" class="pdp-qty-btn" onclick="adjustPdpQty(1)">+</button>
+            </div>
+            
+            <button type="button" class="pdp-atc-btn" onclick="addToCartAjax('{{ active_product.selected_or_first_available_variant.id | default: 12345 }}')">
+              Add to cart
+            </button>
+          </div>
+
+          <button type="button" class="pdp-buy-now-btn" onclick="buyNowCheckout('{{ active_product.selected_or_first_available_variant.id | default: 12345 }}')">
+            Buy It Now
+          </button>
+        </div>
+
+        <!-- Accordions -->
+        <div class="pdp-accordion-section">
+          <div class="pdp-accordion-item open">
+            <div class="pdp-accordion-header" onclick="toggleAccordion(this)">
+              <span>Product Description</span>
+              <span>+</span>
+            </div>
+            <div class="pdp-accordion-content">
+              {{ active_product.description | default: "Our custom jewelry pieces are made with love and designed to last a lifetime. Each item is carefully inspected before shipping to ensure supreme quality." }}
+            </div>
+          </div>
+
+          <div class="pdp-accordion-item">
+            <div class="pdp-accordion-header" onclick="toggleAccordion(this)">
+              <span>Shipping & Delivery</span>
+              <span>+</span>
+            </div>
+            <div class="pdp-accordion-content">
+              Standard shipping takes 3-5 business days. Free shipping on all orders over €50. Tracking information is provided via email once your order ships.
+            </div>
+          </div>
+
+          <div class="pdp-accordion-item">
+            <div class="pdp-accordion-header" onclick="toggleAccordion(this)">
+              <span>Return & Exchange Policy</span>
+              <span>+</span>
+            </div>
+            <div class="pdp-accordion-content">
+              We accept returns within 30 days of purchase for non-customized items. Personalized and custom engraved items are final sale unless damaged upon arrival.
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<script>
+  (function() {
+    const sectionId = "{{ section.id }}";
+    let activeIndex = 0;
+
+    window.setGalleryImage = function(imgSrc, index) {
+      activeIndex = index;
+      const mainImg = document.getElementById('MainProductImage-' + sectionId);
+      if (mainImg && imgSrc) {
+        mainImg.src = imgSrc;
+      }
+      
+      const thumbs = document.querySelectorAll('#CustomProductSection-' + sectionId + ' .pdp-thumb-item');
+      thumbs.forEach((el, idx) => {
+        if (idx === index) {
+          el.classList.add('active');
+          el.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
+        } else {
+          el.classList.remove('active');
+        }
+      });
+    }
+
+    window.slideGallery = function(direction) {
+      const thumbs = document.querySelectorAll('#CustomProductSection-' + sectionId + ' .pdp-thumb-item');
+      if (thumbs.length === 0) return;
+
+      activeIndex += direction;
+      if (activeIndex < 0) {
+        activeIndex = thumbs.length - 1;
+      } else if (activeIndex >= thumbs.length) {
+        activeIndex = 0;
+      }
+
+      const targetThumb = thumbs[activeIndex];
+      if (targetThumb) {
+        const imgSrc = targetThumb.getAttribute('data-img-src');
+        if (imgSrc) {
+          setGalleryImage(imgSrc, activeIndex);
+        }
+      }
+    }
+  })();
+
+  function adjustPdpQty(change) {
+    const input = document.getElementById('PdpQtyInput');
+    let val = parseInt(input.value) || 1;
+    val += change;
+    if (val < 1) val = 1;
+    input.value = val;
+  }
+
+  function toggleAccordion(header) {
+    const item = header.closest('.pdp-accordion-item');
+    item.classList.toggle('open');
+  }
+
+  function addToCartAjax(variantId) {
+    const quantity = parseInt(document.getElementById('PdpQtyInput').value) || 1;
+    if(variantId === '12345') {
+      alert('Product added to cart successfully!');
+      return;
+    }
+
+    let formData = { 'items': [{ 'id': variantId, 'quantity': quantity }] };
+    fetch('/cart/add.js', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(formData)
+    })
+    .then(response => response.json())
+    .then(data => {
+      if (document.querySelector('cart-drawer')) {
+        document.querySelector('cart-drawer').open();
+      } else {
+        window.location.href = '/cart';
+      }
+    })
+    .catch((error) => console.error('Error:', error));
+  }
+
+  function buyNowCheckout(variantId) {
+    const quantity = parseInt(document.getElementById('PdpQtyInput').value) || 1;
+    if(variantId === '12345') {
+      window.location.href = '/checkout';
+      return;
+    }
+
+    let formData = { 'items': [{ 'id': variantId, 'quantity': quantity }] };
+    fetch('/cart/add.js', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(formData)
+    })
+    .then(response => response.json())
+    .then(data => { window.location.href = '/checkout'; })
+    .catch((error) => console.error('Error:', error));
+  }
+</script>
