@@ -1,0 +1,1065 @@
+{% comment %}
+  Custom Contact Form Section
+  File: sections/contact_page.liquid
+{% endcomment %}
+
+{%- liquid
+  assign sid = section.id
+  assign contact_form_id = 'ContactForm-' | append: sid
+-%}
+
+<style>
+  #cc-{{ sid }} {
+    --cc-bg: {{ section.settings.bg_color }};
+    --cc-eyebrow: {{ section.settings.eyebrow_color }};
+    --cc-heading: {{ section.settings.heading_color }};
+    --cc-text: {{ section.settings.text_color }};
+    --cc-icon-bg: {{ section.settings.icon_circle_bg }};
+    --cc-icon-border: {{ section.settings.icon_circle_border }};
+    --cc-icon-color: {{ section.settings.icon_color }};
+    --cc-email-label: {{ section.settings.email_label_color }};
+    --cc-email-value: {{ section.settings.email_value_color }};
+    --cc-card-bg: {{ section.settings.card_bg }};
+    --cc-card-border: {{ section.settings.card_border }};
+    --cc-form-heading: {{ section.settings.form_heading_color }};
+    --cc-form-desc: {{ section.settings.form_desc_color }};
+    --cc-label: {{ section.settings.label_color }};
+    --cc-required: {{ section.settings.required_color }};
+    --cc-input-bg: {{ section.settings.input_bg }};
+    --cc-input-border: {{ section.settings.input_border }};
+    --cc-input-focus: {{ section.settings.input_focus_border }};
+    --cc-input-text: {{ section.settings.input_text_color }};
+    --cc-placeholder: {{ section.settings.placeholder_color }};
+    --cc-input-icon: {{ section.settings.input_icon_color }};
+    --cc-btn: {{ section.settings.button_color }};
+    --cc-btn-hover: {{ section.settings.button_hover_color }};
+    --cc-btn-text: {{ section.settings.button_text_color }};
+    --cc-secure-text: {{ section.settings.secure_text_color }};
+    --cc-secure-icon: {{ section.settings.secure_icon_color }};
+    --cc-success-bg: {{ section.settings.success_bg }};
+    --cc-success-text: {{ section.settings.success_text }};
+    --cc-error-bg: {{ section.settings.error_bg }};
+    --cc-error-text: {{ section.settings.error_text }};
+    --cc-fs: {{ section.settings.text_size }}px;
+    --cc-title-fs: {{ section.settings.title_size }}px;
+    --cc-form-title-fs: {{ section.settings.form_title_size }}px;
+
+    background: var(--cc-bg);
+    color: var(--cc-text);
+    padding-top: {{ section.settings.padding_top }}px;
+    padding-bottom: {{ section.settings.padding_bottom }}px;
+    font-family: inherit;
+    font-size: var(--cc-fs);
+    box-sizing: border-box;
+    width: 100%;
+    overflow-x: hidden;
+  }
+
+  #cc-{{ sid }} *,
+  #cc-{{ sid }} *::before,
+  #cc-{{ sid }} *::after {
+    box-sizing: border-box;
+  }
+
+  #cc-{{ sid }} .cc-container {
+    max-width: {{ section.settings.container_width }}px;
+    margin: 0 auto;
+    padding: 0 20px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 60px;
+    align-items: center;
+  }
+
+  #cc-{{ sid }} .cc-eyebrow {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    color: var(--cc-eyebrow);
+    font-size: var(--cc-fs);
+    font-weight: 700;
+    letter-spacing: 0.15em;
+    margin: 0 0 14px;
+  }
+
+  #cc-{{ sid }} .cc-title {
+    font-size: var(--cc-title-fs);
+    font-weight: 700;
+    line-height: 1.15;
+    letter-spacing: -0.02em;
+    color: var(--cc-heading);
+    margin: 0 0 20px;
+  }
+
+  #cc-{{ sid }} .cc-desc {
+    font-size: var(--cc-fs);
+    line-height: 1.7;
+    color: var(--cc-text);
+    margin: 0 0 28px;
+    max-width: 520px;
+  }
+
+  #cc-{{ sid }} .cc-desc p {
+    margin: 0 0 6px;
+  }
+
+  #cc-{{ sid }} .cc-contact-list {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    margin-bottom: 24px;
+  }
+
+  #cc-{{ sid }} .cc-contact {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+  }
+
+  #cc-{{ sid }} .cc-contact-icon {
+    flex: 0 0 44px;
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    background: var(--cc-icon-bg);
+    border: 1px solid var(--cc-icon-border);
+    color: var(--cc-icon-color);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  #cc-{{ sid }} .cc-contact-label {
+    display: block;
+    color: var(--cc-email-label);
+    font-size: var(--cc-fs);
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    line-height: 1.3;
+  }
+
+  #cc-{{ sid }} .cc-contact-value {
+    display: block;
+    font-size: var(--cc-fs);
+    font-weight: 700;
+    color: var(--cc-email-value);
+    text-decoration: none;
+    word-break: break-word;
+  }
+
+  #cc-{{ sid }} .cc-contact-value:hover {
+    text-decoration: underline;
+  }
+
+  #cc-{{ sid }} .cc-social-heading {
+    color: var(--cc-heading);
+    font-size: var(--cc-fs);
+    font-weight: 700;
+    line-height: 1.4;
+    margin: 24px 0 12px;
+  }
+
+  #cc-{{ sid }} .cc-socials {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin-top: 0;
+  }
+
+  #cc-{{ sid }} .cc-social-link {
+    width: 44px;
+    height: 44px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid var(--cc-icon-border);
+    border-radius: 50%;
+    background: var(--cc-icon-bg);
+    color: var(--cc-icon-color);
+    text-decoration: none;
+    transition: background .2s ease, color .2s ease,
+      border-color .2s ease, transform .2s ease;
+  }
+
+  #cc-{{ sid }} .cc-social-link svg {
+    display: block;
+    width: 19px;
+    height: 19px;
+  }
+
+  #cc-{{ sid }} .cc-social-link:hover {
+    background: var(--cc-btn);
+    color: var(--cc-btn-text);
+    border-color: var(--cc-btn);
+    transform: translateY(-3px);
+  }
+
+  #cc-{{ sid }} .cc-social-link:focus-visible {
+    outline: 2px solid var(--cc-input-focus);
+    outline-offset: 3px;
+  }
+
+  #cc-{{ sid }} .cc-card {
+    background: var(--cc-card-bg);
+    border: 1px solid var(--cc-card-border);
+    border-radius: 28px;
+    padding: 50px;
+  }
+
+  #cc-{{ sid }} .cc-form-title {
+    font-size: var(--cc-form-title-fs);
+    font-weight: 700;
+    line-height: 1.15;
+    letter-spacing: -0.02em;
+    color: var(--cc-form-heading);
+    margin: 0 0 10px;
+  }
+
+  #cc-{{ sid }} .cc-form-desc {
+    font-size: var(--cc-fs);
+    line-height: 1.7;
+    color: var(--cc-form-desc);
+    margin: 0 0 28px;
+  }
+
+  #cc-{{ sid }} .cc-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 18px;
+  }
+
+  #cc-{{ sid }} .cc-field {
+    margin-bottom: 20px;
+  }
+
+  #cc-{{ sid }} .cc-label {
+    display: block;
+    font-size: var(--cc-fs);
+    font-weight: 700;
+    color: var(--cc-label);
+    margin-bottom: 8px;
+  }
+
+  #cc-{{ sid }} .cc-label .cc-req {
+    color: var(--cc-required);
+    margin-left: 2px;
+  }
+
+  #cc-{{ sid }} .cc-input-wrap {
+    position: relative;
+  }
+
+  #cc-{{ sid }} .cc-input-wrap svg.cc-ico {
+    position: absolute;
+    left: 16px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 16px;
+    height: 16px;
+    color: var(--cc-input-icon);
+    pointer-events: none;
+  }
+
+  #cc-{{ sid }} .cc-input-wrap.cc-textarea-wrap svg.cc-ico {
+    top: 20px;
+    transform: none;
+  }
+
+  #cc-{{ sid }} .cc-input,
+  #cc-{{ sid }} .cc-textarea {
+    width: 100%;
+    font-family: inherit;
+    font-size: var(--cc-fs);
+    color: var(--cc-input-text);
+    background: var(--cc-input-bg);
+    border: 1px solid var(--cc-input-border);
+    border-radius: 12px;
+    padding: 0 16px 0 46px;
+    height: 56px;
+    outline: none;
+    transition: border-color .2s ease, box-shadow .2s ease;
+    appearance: none;
+  }
+
+  #cc-{{ sid }} .cc-textarea {
+    height: auto;
+    min-height: 170px;
+    padding: 16px 16px 16px 46px;
+    resize: vertical;
+    line-height: 1.5;
+  }
+
+  #cc-{{ sid }} .cc-input::placeholder,
+  #cc-{{ sid }} .cc-textarea::placeholder {
+    color: var(--cc-placeholder);
+    opacity: 1;
+  }
+
+  #cc-{{ sid }} .cc-input:focus,
+  #cc-{{ sid }} .cc-textarea:focus {
+    border-color: var(--cc-input-focus);
+    box-shadow: 0 0 0 3px color-mix(in srgb, var(--cc-input-focus) 15%, transparent);
+  }
+
+  #cc-{{ sid }} .cc-submit {
+    width: 100%;
+    min-height: 58px;
+    border: none;
+    border-radius: 12px;
+    background: var(--cc-btn);
+    color: var(--cc-btn-text);
+    font-family: inherit;
+    font-size: var(--cc-fs);
+    font-weight: 700;
+    cursor: pointer;
+    transition: background .2s ease, transform .2s ease;
+  }
+
+  #cc-{{ sid }} .cc-submit:hover {
+    background: var(--cc-btn-hover);
+    transform: translateY(-1px);
+  }
+
+  #cc-{{ sid }} .cc-secure {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    margin: 18px 0 0;
+    font-size: var(--cc-fs);
+    color: var(--cc-secure-text);
+    text-align: center;
+  }
+
+  #cc-{{ sid }} .cc-secure svg {
+    width: 14px;
+    height: 14px;
+    flex: 0 0 14px;
+    color: var(--cc-secure-icon);
+  }
+
+  #cc-{{ sid }} .cc-msg {
+    padding: 14px 16px;
+    border-radius: 10px;
+    margin-bottom: 20px;
+    font-size: var(--cc-fs);
+  }
+
+  #cc-{{ sid }} .cc-msg--success {
+    background: var(--cc-success-bg);
+    color: var(--cc-success-text);
+  }
+
+  #cc-{{ sid }} .cc-msg--error {
+    background: var(--cc-error-bg);
+    color: var(--cc-error-text);
+  }
+
+  #cc-{{ sid }} .cc-msg--error ul {
+    margin: 0;
+    padding-left: 18px;
+  }
+
+  @media (max-width: 989px) {
+    #cc-{{ sid }} .cc-container {
+      grid-template-columns: 1fr;
+      gap: 40px;
+    }
+
+    #cc-{{ sid }} {
+      --cc-title-fs: {{ section.settings.title_size | times: 0.85 | round }}px;
+    }
+
+    #cc-{{ sid }} .cc-desc {
+      max-width: 100%;
+    }
+  }
+
+  @media (max-width: 667px) {
+    #cc-{{ sid }} {
+      --cc-fs: {{ section.settings.text_size_mobile }}px;
+      --cc-title-fs: {{ section.settings.title_size_mobile }}px;
+      --cc-form-title-fs: {{ section.settings.form_title_size_mobile }}px;
+      padding-top: {{ section.settings.padding_top | times: 0.7 | round }}px;
+      padding-bottom: {{ section.settings.padding_bottom | times: 0.7 | round }}px;
+    }
+
+    #cc-{{ sid }} .cc-container {
+      gap: 32px;
+      padding: 0 16px;
+    }
+
+    #cc-{{ sid }} .cc-card {
+      padding: 28px 20px;
+      border-radius: 22px;
+    }
+
+    #cc-{{ sid }} .cc-row {
+      grid-template-columns: 1fr;
+      gap: 0;
+    }
+  }
+</style>
+
+<section id="cc-{{ sid }}" class="cc-section">
+  <div class="cc-container">
+    <div class="cc-left">
+      {% if section.settings.eyebrow != blank %}
+        <p class="cc-eyebrow">{{ section.settings.eyebrow | escape }}</p>
+      {% endif %}
+
+      {% if section.settings.title != blank %}
+        <h2 class="cc-title">{{ section.settings.title | escape }}</h2>
+      {% endif %}
+
+      {% if section.settings.description != blank %}
+        <div class="cc-desc">{{ section.settings.description }}</div>
+      {% endif %}
+
+      <div class="cc-contact-list">
+        {% if section.settings.email != blank %}
+        <div class="cc-contact">
+          <span class="cc-contact-icon" aria-hidden="true">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+              <rect x="3" y="5" width="18" height="14" rx="2"/>
+              <path d="m3 7 9 6 9-6"/>
+            </svg>
+          </span>
+          <div>
+            <span class="cc-contact-label">{{ section.settings.email_label | escape }}</span>
+            <a class="cc-contact-value" href="mailto:{{ section.settings.email | escape }}">{{ section.settings.email | escape }}</a>
+          </div>
+        </div>
+      {% endif %}
+
+      {% if section.settings.phone != blank %}
+        <div class="cc-contact">
+          <span class="cc-contact-icon" aria-hidden="true">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M5 4h4l2 5-2.5 1.5a11 11 0 0 0 5 5L15 13l5 2v4a2 2 0 0 1-2 2A16 16 0 0 1 3 6a2 2 0 0 1 2-2z"/>
+            </svg>
+          </span>
+          <div>
+            <span class="cc-contact-label">{{ section.settings.phone_label | escape }}</span>
+            <a class="cc-contact-value" href="tel:{{ section.settings.phone | escape }}">{{ section.settings.phone | escape }}</a>
+          </div>
+        </div>
+      {% endif %}
+
+      {% if section.settings.address != blank %}
+        <div class="cc-contact">
+          <span class="cc-contact-icon" aria-hidden="true">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/>
+              <circle cx="12" cy="10" r="3"/>
+            </svg>
+          </span>
+          <div>
+            <span class="cc-contact-label">{{ section.settings.address_label | escape }}</span>
+            <span class="cc-contact-value" style="font-weight: 500;">{{ section.settings.address | escape }}</span>
+          </div>
+        </div>
+      {% endif %}
+      </div>
+
+      {% if section.settings.facebook_url != blank or section.settings.instagram_url != blank or section.settings.whatsapp_url != blank %}
+        {% if section.settings.social_heading != blank %}
+          <p class="cc-social-heading">{{ section.settings.social_heading | escape }}</p>
+        {% endif %}
+
+        <div class="cc-socials" aria-label="Social media links">
+          {% if section.settings.facebook_url != blank %}
+            <a class="cc-social-link" href="{{ section.settings.facebook_url | escape }}" target="_blank" rel="noopener noreferrer" aria-label="Facebook">
+              <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                <path d="M13.5 21v-8h2.7l.4-3h-3.1V8.1c0-.9.3-1.5 1.6-1.5h1.7V3.9c-.3 0-1.3-.1-2.5-.1-2.5 0-4.2 1.5-4.2 4.3V10H7.3v3h2.8v8h3.4z"/>
+              </svg>
+            </a>
+          {% endif %}
+
+          {% if section.settings.instagram_url != blank %}
+            <a class="cc-social-link" href="{{ section.settings.instagram_url | escape }}" target="_blank" rel="noopener noreferrer" aria-label="Instagram">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <rect x="3" y="3" width="18" height="18" rx="5"/>
+                <circle cx="12" cy="12" r="4"/>
+                <circle cx="17.5" cy="6.8" r="1" fill="currentColor" stroke="none"/>
+              </svg>
+            </a>
+          {% endif %}
+
+          {% if section.settings.whatsapp_url != blank %}
+            <a class="cc-social-link" href="{{ section.settings.whatsapp_url | escape }}" target="_blank" rel="noopener noreferrer" aria-label="WhatsApp">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <path d="M20 11.5a8.4 8.4 0 0 1-12.4 7.4L3 20l1.2-4.4A8.4 8.4 0 1 1 20 11.5Z"/>
+                <path d="M8.5 8.2c.3-.5.6-.5.9-.5h.4c.2 0 .4.1.5.4l.8 1.8c.1.2 0 .4-.1.6l-.6.7c-.2.2-.2.4 0 .6.5.9 1.3 1.6 2.2 2.1.2.1.4.1.6-.1l.8-1c.2-.2.4-.2.6-.1l1.7.8c.3.1.4.3.4.5 0 .3-.1 1.1-.7 1.6-.5.5-1.3.7-2 .5-1.1-.2-2.5-.9-3.8-2.1-1.1-1-1.9-2.3-2.1-3.3-.2-.8.1-1.6.4-2Z"/>
+              </svg>
+            </a>
+          {% endif %}
+        </div>
+      {% endif %}
+    </div>
+
+    <div class="cc-card">
+      {% if section.settings.form_title != blank %}
+        <h3 class="cc-form-title">{{ section.settings.form_title | escape }}</h3>
+      {% endif %}
+
+      {% if section.settings.form_description != blank %}
+        <p class="cc-form-desc">{{ section.settings.form_description | escape }}</p>
+      {% endif %}
+
+      {% form 'contact', id: contact_form_id %}
+        {% if form.posted_successfully? %}
+          <div class="cc-msg cc-msg--success" role="status" tabindex="-1">
+            {{ section.settings.success_message | escape }}
+          </div>
+        {% endif %}
+
+        {% if form.errors %}
+          <div class="cc-msg cc-msg--error" role="alert">
+            <ul>
+              {% for field in form.errors %}
+                <li>
+                  {{ form.errors.translated_fields[field] | capitalize }} {{ form.errors.messages[field] }}
+                </li>
+              {% endfor %}
+            </ul>
+          </div>
+        {% endif %}
+
+        <div class="cc-row">
+          <div class="cc-field">
+            <label class="cc-label" for="cc-name-{{ sid }}">Full name</label>
+            <div class="cc-input-wrap">
+              <svg class="cc-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <circle cx="12" cy="8" r="4"/>
+                <path d="M4 21c0-4 4-6 8-6s8 2 8 6"/>
+              </svg>
+              <input
+                class="cc-input"
+                type="text"
+                id="cc-name-{{ sid }}"
+                name="contact[name]"
+                value="{% if form.name %}{{ form.name | escape }}{% elsif customer %}{{ customer.name | escape }}{% endif %}"
+                placeholder="Enter your name"
+                autocomplete="name"
+              >
+            </div>
+          </div>
+
+          <div class="cc-field">
+            <label class="cc-label" for="cc-email-{{ sid }}">Email address<span class="cc-req">*</span></label>
+            <div class="cc-input-wrap">
+              <svg class="cc-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <rect x="3" y="5" width="18" height="14" rx="2"/>
+                <path d="m3 7 9 6 9-6"/>
+              </svg>
+              <input
+                class="cc-input"
+                type="email"
+                id="cc-email-{{ sid }}"
+                name="contact[email]"
+                value="{% if form.email %}{{ form.email | escape }}{% elsif customer %}{{ customer.email | escape }}{% endif %}"
+                placeholder="Enter your email"
+                autocomplete="email"
+                autocorrect="off"
+                autocapitalize="off"
+                required
+              >
+            </div>
+          </div>
+        </div>
+
+        <div class="cc-field">
+          <label class="cc-label" for="cc-phone-{{ sid }}">Phone number</label>
+          <div class="cc-input-wrap">
+            <svg class="cc-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M5 4h4l2 5-2.5 1.5a11 11 0 0 0 5 5L15 13l5 2v4a2 2 0 0 1-2 2A16 16 0 0 1 3 6a2 2 0 0 1 2-2z"/>
+            </svg>
+            <input
+              class="cc-input"
+              type="tel"
+              id="cc-phone-{{ sid }}"
+              name="contact[phone]"
+              value="{{ form.phone | escape }}"
+              placeholder="Enter your phone number"
+              autocomplete="tel"
+            >
+          </div>
+        </div>
+
+        <div class="cc-field">
+          <label class="cc-label" for="cc-message-{{ sid }}">Your message</label>
+          <div class="cc-input-wrap cc-textarea-wrap">
+            <svg class="cc-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M4 4h16v12H8l-4 4z"/>
+            </svg>
+            <textarea
+              class="cc-textarea"
+              id="cc-message-{{ sid }}"
+              name="contact[body]"
+              rows="6"
+              placeholder="How can we help you?"
+            >{{ form.body | escape }}</textarea>
+          </div>
+        </div>
+
+        <button type="submit" class="cc-submit">{{ section.settings.button_label | escape }}</button>
+
+        {% if section.settings.secure_text != blank %}
+          <p class="cc-secure">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M12 3l8 3v6c0 5-3.5 8-8 9-4.5-1-8-4-8-9V6z"/>
+              <path d="m9 12 2 2 4-4"/>
+            </svg>
+            {{ section.settings.secure_text | escape }}
+          </p>
+        {% endif %}
+      {% endform %}
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Custom Contact Form",
+  "tag": "section",
+  "class": "section-custom-contact",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Left Content"
+    },
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Eyebrow Text",
+      "default": "Get in touch"
+    },
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Heading",
+      "default": "We'd love to hear from you."
+    },
+    {
+      "type": "richtext",
+      "id": "description",
+      "label": "Description",
+      "default": "<p>Have a question, need assistance, or simply want to say hello? Send us a message and our team will be happy to help.</p>"
+    },
+    {
+      "type": "text",
+      "id": "email_label",
+      "label": "Email Label",
+      "default": "Email us"
+    },
+    {
+      "type": "text",
+      "id": "email",
+      "label": "Email Address",
+      "default": "sales@example.com"
+    },
+    {
+      "type": "text",
+      "id": "phone_label",
+      "label": "Phone Label",
+      "default": "Call us"
+    },
+    {
+      "type": "text",
+      "id": "phone",
+      "label": "Phone Number",
+      "default": "+1 (234) 567-890"
+    },
+    {
+      "type": "text",
+      "id": "address_label",
+      "label": "Location Label",
+      "default": "Our Office"
+    },
+    {
+      "type": "text",
+      "id": "address",
+      "label": "Location / Address",
+      "default": "123 Street, City, Country"
+    },
+    {
+      "type": "header",
+      "content": "Social Media Links"
+    },
+    {
+      "type": "text",
+      "id": "social_heading",
+      "label": "Social Media Heading",
+      "default": "Follow Us"
+    },
+    {
+      "type": "url",
+      "id": "facebook_url",
+      "label": "Facebook URL"
+    },
+    {
+      "type": "url",
+      "id": "instagram_url",
+      "label": "Instagram URL"
+    },
+    {
+      "type": "url",
+      "id": "whatsapp_url",
+      "label": "WhatsApp URL",
+      "info": "Use a link such as https://wa.me/8801XXXXXXXXX"
+    },
+    {
+      "type": "header",
+      "content": "Form Card Content"
+    },
+    {
+      "type": "text",
+      "id": "form_title",
+      "label": "Form Heading",
+      "default": "Send us a message"
+    },
+    {
+      "type": "text",
+      "id": "form_description",
+      "label": "Form Description",
+      "default": "Fill out the form below and we'll get back to you as soon as possible."
+    },
+    {
+      "type": "text",
+      "id": "button_label",
+      "label": "Button Label",
+      "default": "Submit"
+    },
+    {
+      "type": "text",
+      "id": "secure_text",
+      "label": "Privacy Note",
+      "default": "Your information is kept private and secure."
+    },
+    {
+      "type": "text",
+      "id": "success_message",
+      "label": "Success Message",
+      "default": "Thanks for contacting us. We'll get back to you as soon as possible."
+    },
+    {
+      "type": "header",
+      "content": "Font Size: Desktop"
+    },
+    {
+      "type": "range",
+      "id": "text_size",
+      "min": 12,
+      "max": 22,
+      "step": 1,
+      "unit": "px",
+      "label": "Base Text Size (labels, inputs, button)",
+      "default": 16
+    },
+    {
+      "type": "range",
+      "id": "title_size",
+      "min": 24,
+      "max": 72,
+      "step": 1,
+      "unit": "px",
+      "label": "Left Heading Size",
+      "default": 44
+    },
+    {
+      "type": "range",
+      "id": "form_title_size",
+      "min": 20,
+      "max": 60,
+      "step": 1,
+      "unit": "px",
+      "label": "Form Heading Size",
+      "default": 38
+    },
+    {
+      "type": "header",
+      "content": "Font Size: Mobile"
+    },
+    {
+      "type": "range",
+      "id": "text_size_mobile",
+      "min": 12,
+      "max": 22,
+      "step": 1,
+      "unit": "px",
+      "label": "Base Text Size (labels, inputs, button)",
+      "default": 16,
+      "info": "Input-e 16px er niche hole iPhone-e zoom hote pare."
+    },
+    {
+      "type": "range",
+      "id": "title_size_mobile",
+      "min": 18,
+      "max": 56,
+      "step": 1,
+      "unit": "px",
+      "label": "Left Heading Size",
+      "default": 30
+    },
+    {
+      "type": "range",
+      "id": "form_title_size_mobile",
+      "min": 16,
+      "max": 48,
+      "step": 1,
+      "unit": "px",
+      "label": "Form Heading Size",
+      "default": 28
+    },
+    {
+      "type": "header",
+      "content": "Colors: Section"
+    },
+    {
+      "type": "color",
+      "id": "bg_color",
+      "label": "Section Background",
+      "default": "#ffffff"
+    },
+    {
+      "type": "header",
+      "content": "Colors: Left Side"
+    },
+    {
+      "type": "color",
+      "id": "eyebrow_color",
+      "label": "Eyebrow Text & Line",
+      "default": "#a67c3d"
+    },
+    {
+      "type": "color",
+      "id": "heading_color",
+      "label": "Heading",
+      "default": "#1a2420"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Description Text",
+      "default": "#333333"
+    },
+    {
+      "type": "color",
+      "id": "icon_circle_bg",
+      "label": "Email and Social Icon Background",
+      "default": "#f6efe6"
+    },
+    {
+      "type": "color",
+      "id": "icon_circle_border",
+      "label": "Email and Social Icon Border",
+      "default": "#eadfce"
+    },
+    {
+      "type": "color",
+      "id": "icon_color",
+      "label": "Email and Social Icons",
+      "default": "#a67c3d"
+    },
+    {
+      "type": "color",
+      "id": "email_label_color",
+      "label": "Email Label",
+      "default": "#b8946a"
+    },
+    {
+      "type": "color",
+      "id": "email_value_color",
+      "label": "Email Address",
+      "default": "#1a2420"
+    },
+    {
+      "type": "header",
+      "content": "Colors: Form Card"
+    },
+    {
+      "type": "color",
+      "id": "card_bg",
+      "label": "Card Background",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "card_border",
+      "label": "Card Border",
+      "default": "#e6e6e6"
+    },
+    {
+      "type": "color",
+      "id": "form_heading_color",
+      "label": "Form Heading",
+      "default": "#1a2420"
+    },
+    {
+      "type": "color",
+      "id": "form_desc_color",
+      "label": "Form Description",
+      "default": "#555555"
+    },
+    {
+      "type": "color",
+      "id": "label_color",
+      "label": "Field Labels",
+      "default": "#1a2420"
+    },
+    {
+      "type": "color",
+      "id": "required_color",
+      "label": "Required Star (*)",
+      "default": "#a67c3d"
+    },
+    {
+      "type": "header",
+      "content": "Colors: Input Fields"
+    },
+    {
+      "type": "color",
+      "id": "input_bg",
+      "label": "Input Background",
+      "default": "#f9f9f7"
+    },
+    {
+      "type": "color",
+      "id": "input_border",
+      "label": "Input Border",
+      "default": "#e3e3e3"
+    },
+    {
+      "type": "color",
+      "id": "input_focus_border",
+      "label": "Input Border (on focus)",
+      "default": "#1f9d55"
+    },
+    {
+      "type": "color",
+      "id": "input_text_color",
+      "label": "Input Text",
+      "default": "#1a2420"
+    },
+    {
+      "type": "color",
+      "id": "placeholder_color",
+      "label": "Placeholder Text",
+      "default": "#8a8a8a"
+    },
+    {
+      "type": "color",
+      "id": "input_icon_color",
+      "label": "Input Icons",
+      "default": "#8a8a8a"
+    },
+    {
+      "type": "header",
+      "content": "Colors: Button"
+    },
+    {
+      "type": "color",
+      "id": "button_color",
+      "label": "Button Background",
+      "default": "#1f9d55"
+    },
+    {
+      "type": "color",
+      "id": "button_hover_color",
+      "label": "Button Hover Background",
+      "default": "#178044"
+    },
+    {
+      "type": "color",
+      "id": "button_text_color",
+      "label": "Button Text",
+      "default": "#ffffff"
+    },
+    {
+      "type": "header",
+      "content": "Colors: Privacy Note"
+    },
+    {
+      "type": "color",
+      "id": "secure_text_color",
+      "label": "Privacy Note Text",
+      "default": "#777777"
+    },
+    {
+      "type": "color",
+      "id": "secure_icon_color",
+      "label": "Privacy Note Icon",
+      "default": "#777777"
+    },
+    {
+      "type": "header",
+      "content": "Colors: Messages"
+    },
+    {
+      "type": "color",
+      "id": "success_bg",
+      "label": "Success Background",
+      "default": "#e8f5e9"
+    },
+    {
+      "type": "color",
+      "id": "success_text",
+      "label": "Success Text",
+      "default": "#1b5e20"
+    },
+    {
+      "type": "color",
+      "id": "error_bg",
+      "label": "Error Background",
+      "default": "#fdecea"
+    },
+    {
+      "type": "color",
+      "id": "error_text",
+      "label": "Error Text",
+      "default": "#b71c1c"
+    },
+    {
+      "type": "header",
+      "content": "Layout"
+    },
+    {
+      "type": "range",
+      "id": "container_width",
+      "min": 900,
+      "max": 1800,
+      "step": 10,
+      "unit": "px",
+      "label": "Container Max Width",
+      "default": 1400
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "min": 0,
+      "max": 160,
+      "step": 5,
+      "unit": "px",
+      "label": "Top Padding",
+      "default": 60
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "min": 0,
+      "max": 160,
+      "step": 5,
+      "unit": "px",
+      "label": "Bottom Padding",
+      "default": 60
+    }
+  ],
+  "presets": [
+    {
+      "name": "Custom Contact Form"
+    }
+  ]
+}
+{% endschema %}

@@ -406,7 +406,7 @@
     border: 1px solid #111111;
     border-radius: 30px;
     padding: 6px 10px;
-    flex: 0 0 110px;
+    flex: 0 0 120px;
     background: #ffffff;
     box-sizing: border-box;
   }
@@ -425,9 +425,17 @@
     background: none;
     text-align: center;
     font-size: 15px;
-    width: 28px;
+    width: 45px;
     font-weight: 600;
     outline: none;
+    padding: 0;
+    -moz-appearance: textfield;
+  }
+
+  .flex-qty-input::-webkit-outer-spin-button,
+  .flex-qty-input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
   }
 
   .flex-buy-now-btn {
@@ -535,8 +543,8 @@
     }
 
     .flex-quantity-wrapper {
-      flex: 0 0 95px;
-      padding: 4px 8px;
+      flex: 0 0 105px;
+      padding: 4px 6px;
     }
 
     .carousel-hover-arrow {

@@ -68,6 +68,12 @@
     opacity: 0.8;
   }
 
+  .tf-logo-img {
+    max-width: {{ section.settings.logo_width }}px;
+    height: auto;
+    display: block;
+  }
+
   .tf-brand-desc {
     font-size: 14px;
     line-height: 1.6;
@@ -241,9 +247,13 @@
       <!-- Column 1: Brand Info & Socials -->
       <div class="tf-brand-col">
         <a href="{{ routes.root_url }}" class="tf-logo-link">
-          <span class="tf-logo-title">{{ section.settings.logo_text_main }}</span>
-          {%- if section.settings.logo_text_sub != blank -%}
-            <span class="tf-logo-subtitle">{{ section.settings.logo_text_sub }}</span>
+          {%- if section.settings.logo != blank -%}
+            <img class="tf-logo-img" src="{{ section.settings.logo | image_url: width: 400 }}" alt="{{ shop.name }}">
+          {%- else -%}
+            <span class="tf-logo-title">{{ section.settings.logo_text_main }}</span>
+            {%- if section.settings.logo_text_sub != blank -%}
+              <span class="tf-logo-subtitle">{{ section.settings.logo_text_sub }}</span>
+            {%- endif -%}
           {%- endif -%}
         </a>
 
@@ -405,6 +415,21 @@
       "content": "🏷️ Logo & Brand Settings"
     },
     {
+      "type": "image_picker",
+      "id": "logo",
+      "label": "Optional Custom Image Logo"
+    },
+    {
+      "type": "range",
+      "id": "logo_width",
+      "min": 50,
+      "max": 350,
+      "step": 5,
+      "unit": "px",
+      "label": "Image Logo Width",
+      "default": 160
+    },
+    {
       "type": "text",
       "id": "logo_text_main",
       "label": "Main Logo Text",
@@ -521,7 +546,7 @@
       "type": "text",
       "id": "newsletter_title",
       "label": "Newsletter Title",
-      "default": "SUBSCRIBE TO OUR EMAILS"
+      "default": "SUBSCRIBE TOOUR EMAILS"
     },
     {
       "type": "textarea",
